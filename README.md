@@ -19,7 +19,7 @@ http://www3.ntu.edu.sg/home/EPNSugan/index_files/CEC-05/CEC05.htm
 ## Testing Environment
 
 * buntu noble/sid
-* gcc 13.
+* gcc 13.3.0
 * Python 3.13
 
 ## Quickstart
