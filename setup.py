@@ -33,13 +33,18 @@ setup(
     ext_modules = [cec2005real],
     package_data = {'cec2005real': [
         'cdatafiles/*.txt', 
-        '*.h'
-        'cec2005real/def1.c',
-        'cec2005real/def2.c',
-        'cec2005real/def3.c',
-        'cec2005real/def4.c',
-        'cec2005real/opr_funcs.c',
-        'cec2005real/rand.c'
+        'cec2005.h',
+        'global.h',
+        'interface.h',
+        'rand.h',
+        'sprng.h',
+        'sub.h',
+        'def1.c',
+        'def2.c',
+        'def3.c',
+        'def4.c',
+        'opr_funcs.c',
+        'rand.c'
     ]},
     tests_require = ['pytest']
 )
