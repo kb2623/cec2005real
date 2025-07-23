@@ -1,0 +1,30 @@
+[build-system]
+requires = [
+    "setuptools>=61.0",
+    "Cython>=3.0.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cec2005real"
+version = "2.0"
+requires-python = ">=3.12"
+authors = [
+  {name = "Daniel Molina", email = "dmolina@decsai.ugr.es"},
+  {name = "Klemen Berkovic", email = "klemen.berkovic@student.um.si"},
+]
+maintainers = [
+  {name = "Klemen Berkovic", email = "klemen.berkovic@student.um.si"}
+]
+description = "Package for benchmark for the Real Large Scale Global Optimization session on IEEE Congress on Evolutionary Computation CEC2005,"
+readme = "README.md"
+license = {text = "GPL V3"}
+keywords = ["c", "optimization", "benchmarks", "CEC2005", "Global Optimization"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+
+[project.urls]
+Homepage = "https://github.com/kb2623/cec2005real"
+Repository = "https://github.com/kb2623/cec2005real.git"
