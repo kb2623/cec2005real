@@ -63,7 +63,7 @@ These two functionalities are done with two methods in Benchmark class:
 ### Obtain information about one function
 
 ```python
->>> from cec2005real.cec2005 import Function
+>>> from cec2005real.cec2005real import Function
 >>> fbench = Function(1, 10)
 >>> fbench.get_info()
 {'best': 0.0,
