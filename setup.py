@@ -28,23 +28,22 @@ cec2005real = Extension(
 
 
 setup(
-    name = 'cec2005real',
     packages = find_packages(),
     ext_modules = [cec2005real],
     package_data = {'cec2005real': [
         'cdatafiles/*.txt', 
         'cec2005.h',
         'global.h',
+        'global.c',
         'interface.h',
         'rand.h',
+        'rand.c',
         'sprng.h',
         'sub.h',
         'def1.c',
         'def2.c',
         'def3.c',
-        'def4.c',
-        'opr_funcs.c',
-        'rand.c'
+        'def4.c'
     ]},
     tests_require = ['pytest']
 )

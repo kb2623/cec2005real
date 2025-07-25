@@ -139,17 +139,13 @@ double eval_cec2005_ld(const long double *x, int ndim) {
 double eval_cec2005(const double *x, int ndim) {
     double optime = cec2005Fun[nfunc - 1].optime;
     long double y[ndim];
-
     for (int i = 0; i < ndim; ++i) {
         y[i] = x[i];
     }
-
     double fit = calc_benchmark_func(y) - optime;
-
     if (fit < 0) {
         fprintf(stderr, "Value: %le\tOptime: %le\n", fit, optime);
     }
-
     assert(fit >= 0);
     return fit;
 }

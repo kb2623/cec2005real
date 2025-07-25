@@ -126,26 +126,20 @@ void transform(long double *x, int count)
 }
 
 /* Code to transform a vector (with elements 5.0) based on function index 'count' */
-void transform_norm(int count)
-{
+void transform_norm(int count) {
     int i, j;
-    for (i = 0; i < nreal; i++)
-    {
+    for (i = 0; i < nreal; i++) {
         temp_x2[i] = 5.0 / lambda[count];
     }
-    for (j = 0; j < nreal; j++)
-    {
+    for (j = 0; j < nreal; j++) {
         temp_x3[j] = 0.0;
-        for (i = 0; i < nreal; i++)
-        {
+        for (i = 0; i < nreal; i++) {
             temp_x3[j] += g[i][j] * temp_x2[i];
         }
     }
-    for (j = 0; j < nreal; j++)
-    {
+    for (j = 0; j < nreal; j++) {
         trans_x[j] = 0.0;
-        for (i = 0; i < nreal; i++)
-        {
+        for (i = 0; i < nreal; i++) {
             trans_x[j] += l[count][i][j] * temp_x3[i];
         }
     }
@@ -153,42 +147,32 @@ void transform_norm(int count)
 }
 
 /* Code to compute the weights for a variable vector */
-void calc_weight(long double *x, int nfunc)
-{
+void calc_weight(long double *x, int nfunc) {
     int i, j;
     long double sum;
     long double max;
     max = -INF;
-    for (i = 0; i < nfunc; i++)
-    {
+    for (i = 0; i < nfunc; i++) {
         sum = 0.0;
-        for (j = 0; j < nreal; j++)
-        {
+        for (j = 0; j < nreal; j++) {
             sum += (x[j] - o[i][j]) * (x[j] - o[i][j]);
         }
         weight[i] = exp(-(sum) / (2.0 * nreal * sigma[i] * sigma[i]));
         max = maximum(max, weight[i]);
     }
     sum = 0.0;
-    for (i = 0; i < nfunc; i++)
-    {
-        if (weight[i] != max)
-        {
+    for (i = 0; i < nfunc; i++) {
+        if (weight[i] != max) {
             weight[i] *= (1.0 - pow(max, 10.0));
         }
         sum += weight[i];
     }
-    if (sum == 0.0)
-    {
-        for (i = 0; i < nfunc; i++)
-        {
+    if (sum == 0.0) {
+        for (i = 0; i < nfunc; i++) {
             weight[i] = 1.0 / (long double)nfunc;
         }
-    }
-    else
-    {
-        for (i = 0; i < nfunc; i++)
-        {
+    } else {
+        for (i = 0; i < nfunc; i++) {
             weight[i] /= sum;
         }
     }
@@ -196,8 +180,7 @@ void calc_weight(long double *x, int nfunc)
 }
 
 /* Code to free the allocated memory */
-void free_memory()
-{
+void free_memory() {
     int i, j;
     free(norm_x);
     free(norm_f);
@@ -211,20 +194,16 @@ void free_memory()
     free(sigma);
     free(lambda);
     free(bias);
-    for (i = 0; i < nfunc; i++)
-    {
-        for (j = 0; j < nreal; j++)
-        {
+    for (i = 0; i < nfunc; i++) {
+        for (j = 0; j < nreal; j++) {
             free(l[i][j]);
         }
     }
-    for (i = 0; i < nfunc; i++)
-    {
+    for (i = 0; i < nfunc; i++) {
         free(o[i]);
         free(l[i]);
     }
-    for (i = 0; i < nreal; i++)
-    {
+    for (i = 0; i < nreal; i++) {
         free(g[i]);
     }
     free(o);
