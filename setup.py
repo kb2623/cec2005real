@@ -9,8 +9,12 @@ from setuptools import (
 from Cython.Distutils import build_ext
 
 sourcefiles = [
+    'cec2005real/util.c',
+    'cec2005real/mrandom.c',
+    'cec2005real/functions.c',
+    'cec2005real/benchfunctions.c',
+    'cec2005real/cec2005.c',
     'cec2005real/cec2005real.pyx',
-    'cec2005real/cec2005.c'
 ]
 
 
@@ -32,18 +36,11 @@ setup(
     ext_modules = [cec2005real],
     package_data = {'cec2005real': [
         'cdatafiles/*.txt', 
-        'cec2005.h',
-        'global.h',
-        'global.c',
-        'interface.h',
-        'rand.h',
-        'rand.c',
-        'sprng.h',
-        'sub.h',
-        'def1.c',
-        'def2.c',
-        'def3.c',
-        'def4.c'
+        'util.h',
+        'mrandom.h',
+        'functions.h',
+        'benchfunctions.h',
+        'cec2005.h'
     ]},
     tests_require = ['pytest']
 )

@@ -9,7 +9,7 @@ import cython
 from libc.stdlib cimport malloc, free
 from libcpp cimport bool
 
-cdef extern from "cec2005.h":
+cdef extern from "cec2005.c":
     bool isBound_cec2005()
     void init_cec2005(int nfun, int dim)
     double eval_cec2005(const double *x, int ndim)
@@ -70,7 +70,7 @@ cdef class Function:
     def __init__(self, int fun, int dim):
         self.fun = fun
         self.dim = dim
-        os.makedirs('cdatafiles', exits_ok=True)
+        os.makedirs('cdatafiles', exist_ok=True)
         cdef bytes dir_name = ('%s/cdatafiles' % os.getcwd()).encode()
         set_directory(dir_name)
         # TODO add copying for input files based on chosen function
