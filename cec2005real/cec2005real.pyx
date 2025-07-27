@@ -9,7 +9,7 @@ import cython
 from libc.stdlib cimport malloc, free
 from libcpp cimport bool
 
-cdef extern from "cec2005.c":
+cdef extern from "cec2005.h":
     bool isBound_cec2005()
     void init_cec2005(int nfun, int dim)
     double eval_cec2005(const double *x, int ndim)

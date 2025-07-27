@@ -10,13 +10,10 @@
 #include <string.h>
 #include <math.h>
 
-/* Global variables that you are required to initialize */
-int nreal;					/* number of real variables */
-int nfunc;					/* number of basic functions */
-
 /* Code to allocate memory to global variables being used in evaluation of functions */
-void allocate_memory() {
+CEC2005data* allocate_memory(int nreal, int nfunc) {
 	int i, j, k;
+	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data))
 	norm_x = (long double *)malloc(nreal * sizeof(long double));
 	norm_f = (long double *)malloc(nfunc * sizeof(long double));
 	trans_x = (long double *)malloc(nreal * sizeof(long double));
@@ -78,39 +75,37 @@ void allocate_memory() {
 			}
 		}
 	}
-	return;
+	return obj;
 }
 
 /* Code to free the allocated memory */
-void free_memory() {
+void free_memory(CEC2005data *obj) {
 	int i, j;
-	free(norm_x);
-	free(norm_f);
-	free(trans_x);
-	free(basic_f);
-	free(temp_x1);
-	free(temp_x2);
-	free(temp_x3);
-	free(temp_x4);
-	free(weight);
-	free(sigma);
-	free(lambda);
-	free(bias);
-	for (i = 0; i < nfunc; i++) {
-		for (j = 0; j < nreal; j++) {
-			free(l[i][j]);
-		}
+	free(obj->norm_x);
+	free(obj->norm_f);
+	free(obj->trans_x);
+	free(obj->basic_f);
+	free(obj->temp_x1);
+	free(obj->temp_x2);
+	free(obj->temp_x3);
+	free(obj->temp_x4);
+	free(obj->weight);
+	free(obj->sigma);
+	free(obj->lambda);
+	free(obj->bias);
+	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
+		free(obj->l[i][j]);
 	}
-	for (i = 0; i < nfunc; i++) {
-		free(o[i]);
-		free(l[i]);
+	for (i = 0; i < obj->nfunc; i++) {
+		free(obj->o[i]);
+		free(obj->l[i]);
 	}
-	for (i = 0; i < nreal; i++) {
-		free(g[i]);
+	for (i = 0; i < obj->nreal; i++) {
+		free(obj->g[i]);
 	}
-	free(o);
-	free(l);
-	free(g);
+	free(obj->o);
+	free(obj->l);
+	free(obj->g);
 	return;
 }
 
@@ -131,7 +126,7 @@ FILE *myopen(const char *file, const char *mode) {
 	return fpt;
 }
 
-void initialize_f1() {
+void initialize_f1(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("sphere_func_data.txt", "r");
@@ -139,57 +134,55 @@ void initialize_f1() {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nfunc; i++) {
-		for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nfunc; i++) {
+		for (j = 0; j < obj->nreal; j++) {
+			// FIXME
 			fscanf(fpt, "%Lf", &o[i][j]);
 			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 	}
 	fclose(fpt);
-	bias[0] = -450.0;
+	obj->bias[0] = -450.0;
 	return;
 }
 
-void initialize_f2()
-{
+void initialize_f2(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("schwefel_102_data.txt", "r");
-
-	if (fpt == NULL)
-	{
+	if (fpt == NULL) {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nfunc; i++)
-	{
-		for (j = 0; j < nreal; j++)
-		{
+	for (i = 0; i < obj->nfunc; i++) {
+		for (j = 0; j < obj->nreal; j++) {
+			// FIXME
 			fscanf(fpt, "%Lf", &o[i][j]);
 			//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 	}
 	fclose(fpt);
-	bias[0] = -450.0;
+	obj->bias[0] = -450.0;
 	return;
 }
 
-void initialize_f3() {
+void initialize_f3(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
-	if (nreal == 2)
+	if (obj->nreal == 2)
 		fpt = myopen("elliptic_M_D2.txt", "r");
-	if (nreal == 10)
+	if (obj->nreal == 10)
 		fpt = myopen("elliptic_M_D10.txt", "r");
-	if (nreal == 30)
+	if (obj->nreal == 30)
 		fpt = myopen("elliptic_M_D30.txt", "r");
-	if (nreal == 50)
+	if (obj->nreal == 50)
 		fpt = myopen("elliptic_M_D50.txt", "r");
 	if (fpt == NULL) {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nreal; i++) for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
+		// FIXME
 		fscanf(fpt, "%Lf", &g[i][j]);
 		//printf("\n G[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
@@ -199,16 +192,16 @@ void initialize_f3() {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nfunc; i++) for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &o[i][j]);
 		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
-	bias[0] = -450.0;
+	obj->bias[0] = -450.0;
 	return;
 }
 
-void initialize_f4() {
+void initialize_f4(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("schwefel_102_data.txt", "r");
@@ -216,68 +209,72 @@ void initialize_f4() {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nfunc; i++) for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
+		// FIXME
 		fscanf(fpt, "%Lf", &o[i][j]);
 		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
-	bias[0] = -450.0;
+	obj->bias[0] = -450.0;
 	return;
 }
 
-void initialize_f5() {
-	int i, j;
-	int index;
-	FILE *fpt;
+void initialize_f5(CEC2005data *obj) {
+	int i, j, index;
 	char c;
-	Af5 = (long double **)malloc(nreal * sizeof(long double));
-	for (i = 0; i < nreal; i++) {
-		Af5[i] = (long double *)malloc(nreal * sizeof(long double));
+	FILE *fpt;
+	obj->Af5 = (long double **)malloc(obj->nreal * sizeof(long double));
+	for (i = 0; i < obj->nreal; i++) {
+		obj->Af5[i] = (long double *)malloc(obj->nreal * sizeof(long double));
 	}
-	Bf5 = (long double *)malloc(nreal * sizeof(long double));
+	obj->Bf5 = (long double *)malloc(obj->nreal * sizeof(long double));
 	fpt = myopen("schwefel_206_data.txt", "r");
-	for (i = 0; i < nfunc; i++) {
-		for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nfunc; i++) {
+		for (j = 0; j < obj->nreal; j++) {
+			// FIXME
 			fscanf(fpt, "%Lf", &o[i][j]);
 			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
+			// FIXME
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
 	}
-	for (i = 0; i < nreal; i++) {
-		for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nreal; i++) {
+		for (j = 0; j < obj->nreal; j++) {
+			// FIXME
 			fscanf(fpt, "%Lf", &Af5[i][j]);
 			//printf("\n A[%d][%d] = %LE",i+1,j+1,A[i][j]);
 		}
 		do {
+			// FIXME
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
 	}
 	fclose(fpt);
-	if (nreal % 4 == 0) {
-		index = nreal / 4;
+	if (obj->nreal % 4 == 0) {
+		index = obj->nreal / 4;
 	} else {
-		index = nreal / 4 + 1;
+		index = obj->nreal / 4 + 1;
 	}
 	for (i = 0; i < index; i++) {
-		o[0][i] = -100.0;
+		obj->o[0][i] = -100.0;
 	}
-	index = (3 * nreal) / 4 - 1;
-	for (i = index; i < nreal; i++) {
-		o[0][i] = 100.0;
+	index = (3 * obj->nreal) / 4 - 1;
+	for (i = index; i < obj->nreal; i++) {
+		obj->o[0][i] = 100.0;
 	}
-	for (i = 0; i < nreal; i++) {
-		Bf5[i] = 0.0;
-		for (j = 0; j < nreal; j++) {
-			Bf5[i] += Af5[i][j] * o[0][j];
+	for (i = 0; i < obj->nreal; i++) {
+		obj->Bf5[i] = 0.0;
+		for (j = 0; j < obj->nreal; j++) {
+			obj->Bf5[i] += obj->Af5[i][j] * obj->o[0][j];
 		}
 	}
-	bias[0] = -310.0;
+	obj->bias[0] = -310.0;
 	return;
 }
 
-void initialize_f6() {
+void initialize_f6(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("rosenbrock_func_data.txt", "r");
@@ -285,17 +282,17 @@ void initialize_f6() {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nfunc; i++) for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &o[i][j]);
-		o[i][j] -= 1.0;
+		obj->o[i][j] -= 1.0;
 		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
-	bias[0] = 390.0;
+	obj->bias[0] = 390.0;
 	return;
 }
 
-void initialize_f7() {
+void initialize_f7(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	if (nreal == 2)
@@ -329,7 +326,7 @@ void initialize_f7() {
 	return;
 }
 
-void initialize_f8() {
+void initialize_f8(CEC2005data *obj) {
 	int i, j;
 	int index;
 	FILE *fpt;
