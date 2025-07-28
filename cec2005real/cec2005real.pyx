@@ -158,10 +158,14 @@ cdef class Function:
         # Check dimensionality
         if x_arr.ndim != 1: raise ValueError("Input must be a 1D array or list.")
         if x_arr.shape[0] != self.cdata.nreal: raise ValueError(f"Input vector must have dimension {self.cdata.nreal}.")
+        # Convert to numpy array that is contiguouus
         x_arr = np.ascontiguousarray(x_arr, dtype=np.longdouble)
         cdef np.ndarray[np_ldouble, ndim=1, mode="c"] x_np = x_arr
+        # Convert to C array
         cdef long double* x_ptr = <long double*> x_np.data
+        # Evaluate the x
         cdef long double result = eval_cec2005(x_ptr, self.cdata)
+        # Return to caller
         return float(result)
 
     def __dealloc__(self):
