@@ -150,21 +150,21 @@ cdef class Function:
 
     cpdef info(self):
         if not self.initialized: raise ValueError('Data not initialized')
-        return _get_info(self.fdata.nfun, self.fdata.nreal)
+        return _get_info(self.fdata.nfunc, self.fdata.nreal)
     
     cpdef eval(self, x):
         if not self.initialized: raise ValueError('Data not initialized')
         x_arr = np.asarray(x, dtype=np.longdouble)
         # Check dimensionality
         if x_arr.ndim != 1: raise ValueError("Input must be a 1D array or list.")
-        if x_arr.shape[0] != self.cdata.nreal: raise ValueError(f"Input vector must have dimension {self.cdata.nreal}.")
+        if x_arr.shape[0] != self.cdata.nreal: raise ValueError(f"Input vector must have dimension {self.fdata.nreal}.")
         # Convert to numpy array that is contiguouus
         x_arr = np.ascontiguousarray(x_arr, dtype=np.longdouble)
         cdef np.ndarray[np_ldouble, ndim=1, mode="c"] x_np = x_arr
         # Convert to C array
         cdef long double* x_ptr = <long double*> x_np.data
         # Evaluate the x
-        cdef long double result = eval_cec2005(x_ptr, self.cdata)
+        cdef long double result = eval_cec2005(x_ptr, self.fdata)
         # Return to caller
         return float(result)
 

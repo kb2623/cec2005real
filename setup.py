@@ -14,6 +14,7 @@ sourcefiles = [
     'cec2005real/functions.c',
     'cec2005real/benchfunctions.c',
     'cec2005real/cec2005.c',
+    'cec2005real/cec2005decl.pxd',
     'cec2005real/cec2005real.pyx',
 ]
 
