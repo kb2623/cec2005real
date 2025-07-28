@@ -109,12 +109,19 @@ void free_memory(CEC2005data *obj) {
 	free(obj->l);
 	free(obj->g);
 	if (obj->nfunc == 5) {
-		// TODO: free Af5
-		// TODO: free Bf5
+		for (i = 0; i < obj->nreal; i++) {
+			free(obj->Af5[i]);
+		}
+		free(obj->Af5);
+		free(obj->Bf5);
 	} else if (obj->nfunc == 12) {
-		// TODO: free Af12
-		// TODO: free Bf12
-		// TODO: free alphaf12
+		for (i = 0; i < obj->nreal; i++) {
+			free(obj->Af12[i]);
+			free(obj->Bf12[i]);
+		}
+		free(obj->Af12);
+		free(obj->Bf12);
+		free(obj->alphaf12);
 	}
 	free(obj);
 	obj = NULL;
