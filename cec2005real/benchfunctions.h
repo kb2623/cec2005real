@@ -2,18 +2,18 @@
 #define BENCHFUNCTIONS_H
 
 struct cec2005data {
-    int nfunc; // number of the benchmark function to optimize
-    int nreal; // number of components/variables for functions
+    int nfunc;              // number of the benchmark function to optimize
+    int nreal;              // number of components/variables for functions
     long double C;
     long double global_bias;
-    long double *bias; // functions error fix
-    long double *trans_x; // Transformation vector
-    long double *basic_f; // Vector of objective values
-    long double *temp_x1; // Temporary vector
-    long double *temp_x2; // Temporary vector
-    long double *temp_x3; // Temporary vector
-    long double *temp_x4; // Temporary vector
-    long double *weight;  // Vector of weights for functions
+    long double *bias;      // functions error fix
+    long double *trans_x;   // Transformation vector of vector x
+    long double *basic_f;   // Vector of objective values
+    long double *temp_x1;   // Temporary vector
+    long double *temp_x2;   // Temporary vector
+    long double *temp_x3;   // Temporary vector
+    long double *temp_x4;   // Temporary vector
+    long double *weight;    // Vector of weights for functions
     long double *sigma;
     long double *lam;
     long double *norm_x;
@@ -21,11 +21,11 @@ struct cec2005data {
     long double **o;
     long double **g;
     long double ***l;
-    long double **Af5;
-    long double *Bf5;
-    long double **Af12;
-    long double **Bf12;
-    long double *alphaf12;
+    long double **Af5;      // First temporary vector for f5
+    long double *Bf5;       // Second temporary vector for f5
+    long double **Af12;     // First temporary vector for f12
+    long double **Bf12;     // Second temporary vector for f12
+    long double *alphaf12;  // Third temporary vector for f12
 };
 
 typedef struct cec2005data CEC2005data;

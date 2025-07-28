@@ -3,81 +3,31 @@
 import os
 import sys
 import pkgutil
-
 import cython
+
+import numpy as np
+cimport numpy as np
 
 from libc.stdlib cimport malloc, free
 from libcpp cimport bool
 
-cdef extern from "benchfunctions.h":
-    cdef struct cec2005data:
-        int nfunc
-        int nreal
-        long double C
-        long double global_bias
-        long double global_bias
-        long double *bias
-        long double *trans_x
-        long double *basic_f
-        long double *temp_x1
-        long double *temp_x2
-        long double *temp_x3
-        long double *temp_x4
-        long double *weight
-        long double *sigma
-        long double *lam
-        long double *norm_x
-        long double *norm_f
-        long double **o
-        long double **g
-        long double ***l
-        long double **Af5
-        long double *Bf5
-        long double **Af12
-        long double **Bf12
-        long double *alphaf12
-    ctypedef cec2005data CEC2005data
+from cec2005decl cimport (
+    CEC2005data,
+    init_cec2005,
+    getInfo_cec2005,
+    isBound_cec2005,
+    eval_cec2005,
+    finish_cec2005
+)
 
-cdef extern from "cec2005.h":
-    bool isBound_cec2005()
-    void init_cec2005(int nfun, int dim)
-    double eval_cec2005(const double *x, int ndim)
-    double eval_cec2005_ld(const long double *x, int ndim)
-    void getInfo_cec2005(int fun, char *name, double *min, double *max, double *optime)
-    void set_directory(char *dir)
+ctypedef np.longdouble_t np_ldouble
 
-cpdef set_function(int fun, int dim):
-    init_cec2005(fun, dim)
-
-cdef int m_fun
-cdef int m_dim
-
-def _cec2005_eval_func(double[::1] x):
-    cdef int dim
-    cdef double fitness
-    cdef double * sol
-
-    dim = x.shape[0]
-
-    sol = <double *> malloc(dim * cython.sizeof(double))
-
-    if sol is NULL:
-        raise MemoryError()
-
-    for i in xrange(dim):
-        sol[i] = x[i]
-
-    fitness = eval_cec2005(sol, dim)
-    free(sol)
-    return fitness
 
 def file_load(data_dir: str, file_name: str):
     if os.path.exists('%s/%s' % (data_dir, file_name)): return
     data = pkgutil.get_data('cec2005real', 'cdatafiles/%s' % file_name)
     with open('%s/%s' % (data_dir, file_name), 'wb') as f: f.write(data)
 
-cpdef get_num_functions(self):
-    return 25
 
 cpdef _get_info(int fun, int dim):
     """
@@ -88,21 +38,25 @@ cpdef _get_info(int fun, int dim):
     cdef char* name = <char *> malloc(300)
     optimum = 0
     getInfo_cec2005(fun, name, &minvalue, &maxvalue, &optimum)
+    return {
+        'lower': minvalue,
+        'upper': maxvalue,
+        'threshold': 1e-8,
+        'best': optimum,
+        'dimension': dim
+    }
 
-    return {'lower': minvalue, 'upper': maxvalue, 'threshold': 1e-8,
-           'best': optimum, 'dimension': dim}
 
 cdef class Function:
-    cdef int fun
-    cdef int dim
+    cdef CEC2005data * fdata
+    cdef bint initialized
+
+    def __cinit__(self, int fun, int dim):
+        self.fdata = init_cec2005(fun, dim)
+        self.initialized = self.fdata is not NULL
     
     def __init__(self, int fun, int dim):
-        self.fun = fun
-        self.dim = dim
         os.makedirs('cdatafiles', exist_ok=True)
-        cdef bytes dir_name = ('%s/cdatafiles' % os.getcwd()).encode()
-        set_directory(dir_name)
-        # TODO add copying for input files based on chosen function
         if fun is 1:
             file_load('cdatafiles', 'sphere_func_data.txt')
         elif fun is 2:
@@ -193,13 +147,22 @@ cdef class Function:
             file_load('cdatafiles', 'hybrid_func4_data.txt')
         else:
             raise Exception('Function number not defined!!!')
-        init_cec2005(fun, dim)
 
     cpdef info(self):
-        return _get_info(self.fun, self.dim)
+        if not self.initialized: raise ValueError('Data not initialized')
+        return _get_info(self.fdata.nfun, self.fdata.nreal)
     
-    cpdef get_dim(self):
-        return self.dim
+    cpdef eval(self, x):
+        if not self.initialized: raise ValueError('Data not initialized')
+        x_arr = np.asarray(x, dtype=np.longdouble)
+        # Check dimensionality
+        if x_arr.ndim != 1: raise ValueError("Input must be a 1D array or list.")
+        if x_arr.shape[0] != self.cdata.nreal: raise ValueError(f"Input vector must have dimension {self.cdata.nreal}.")
+        x_arr = np.ascontiguousarray(x_arr, dtype=np.longdouble)
+        cdef np.ndarray[np_ldouble, ndim=1, mode="c"] x_np = x_arr
+        cdef long double* x_ptr = <long double*> x_np.data
+        cdef long double result = eval_cec2005(x_ptr, self.cdata)
+        return float(result)
 
-    cpdef get_eval_function(self):
-        return _cec2005_eval_func
+    def __dealloc__(self):
+        if self.initialized: finish_cec2005(self.fdata)

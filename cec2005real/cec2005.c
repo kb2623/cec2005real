@@ -10,7 +10,10 @@
 #include <string.h>
 #include <math.h>
 
-/* Code to allocate memory to global variables being used in evaluation of functions */
+/**
+ * nreal: Number of variables/components of the selected benchmark function
+ * nfunc: Index/number of the selected benchmark function
+ */
 CEC2005data* allocate_memory(int nreal, int nfunc) {
 	int i, j, k;
 	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data))
@@ -28,12 +31,12 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 	obj->sigma = (long double *)malloc(nfunc * sizeof(long double));
 	obj->lam = (long double *)malloc(nfunc * sizeof(long double));
 	obj->bias = (long double *)malloc(nfunc * sizeof(long double));
-	obj->o = (long double **)malloc(nfunc * sizeof(long double));
-	obj->l = (long double ***)malloc(nfunc * sizeof(long double));
-	obj->g = (long double **)malloc(nreal * sizeof(long double));
+	obj->o = (long double **)malloc(nfunc * sizeof(long double*));
+	obj->g = (long double **)malloc(nreal * sizeof(long double*));
+	obj->l = (long double ***)malloc(nfunc * sizeof(long double**));
 	for (i = 0; i < nfunc; i++) {
 		obj->o[i] = (long double *)malloc(nreal * sizeof(long double));
-		obj->l[i] = (long double **)malloc(nreal * sizeof(long double));
+		obj->l[i] = (long double **)malloc(nreal * sizeof(long double*));
 	}
 	for (i = 0; i < nreal; i++) {
 		obj->g[i] = (long double *)malloc(nreal * sizeof(long double));
@@ -42,7 +45,6 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 		obj->l[i][j] = (long double *)malloc(nreal * sizeof(long double));
 
 	}
-	/* Do some trivial (common) initialization here itself */
 	obj->C = 2000.0;
 	for (i = 0; i < nreal; i++) {
 		obj->norm_x[i] = 5.0;
@@ -128,18 +130,12 @@ void free_memory(CEC2005data *obj) {
 	return;
 }
 
-static char *dirname;
-
-void set_directory(char *dir) {
-	dirname = dir;
-}
-
 FILE *myopen(const char *file, const char *mode) {
 	FILE *fpt;
 	fpt = fopen(file, mode);
 	if (fpt == NULL) {
 		char fname[500];
-		sprintf(fname, "%s/%s", dirname, file);
+		sprintf(fname, "cdatafiles/%s", file);
 		fpt = fopen(fname, mode);
 	}
 	return fpt;
@@ -155,7 +151,6 @@ void initialize_f1(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -450.0;
@@ -172,7 +167,6 @@ void initialize_f2(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -450.0;
@@ -196,7 +190,6 @@ void initialize_f3(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//printf("\n G[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("high_cond_elliptic_rot_data.txt", "r");
@@ -206,7 +199,6 @@ void initialize_f3(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -450.0;
@@ -223,7 +215,6 @@ void initialize_f4(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -450.0;
@@ -234,7 +225,7 @@ void initialize_f5(CEC2005data *obj) {
 	int i, j, index;
 	char c;
 	FILE *fpt;
-	obj->Af5 = (long double **)malloc(obj->nreal * sizeof(long double));
+	obj->Af5 = (long double **)malloc(obj->nreal * sizeof(long double*));
 	for (i = 0; i < obj->nreal; i++) {
 		obj->Af5[i] = (long double *)malloc(obj->nreal * sizeof(long double));
 	}
@@ -243,7 +234,6 @@ void initialize_f5(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -252,7 +242,6 @@ void initialize_f5(CEC2005data *obj) {
 	for (i = 0; i < obj->nreal; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->Af5[i][j]));
-			//printf("\n A[%d][%d] = %LE",i+1,j+1,A[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -292,7 +281,6 @@ void initialize_f6(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 		obj->o[i][j] -= 1.0;
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = 390.0;
@@ -316,7 +304,6 @@ void initialize_f7(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//printf("\n G[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("griewank_func_data.txt", "r");
@@ -326,7 +313,6 @@ void initialize_f7(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	bias[0] = -180.0;
@@ -351,7 +337,6 @@ void initialize_f8(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//printf("\n M[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("ackley_func_data.txt", "r");
@@ -361,7 +346,6 @@ void initialize_f8(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	index = obj->nreal / 2;
@@ -382,7 +366,6 @@ void initialize_f9(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -330.0;
@@ -406,7 +389,6 @@ void initialize_f10(CEC2005data *obj) {
 	}
 	for (i = 0; i < nreal; i++) for (j = 0; j < nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//            printf("\n M[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("rastrigin_func_data.txt", "r");
@@ -416,7 +398,6 @@ void initialize_f10(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &o[i][j]);
-		//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -330.0;
@@ -440,7 +421,6 @@ void initialize_f11(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//            printf("\n M[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("weierstrass_data.txt", "r");
@@ -450,7 +430,6 @@ void initialize_f11(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = 90.0;
@@ -461,8 +440,8 @@ void initialize_f12(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	char c;
-	obj->Af12 = (long double **)malloc(obj->nreal * sizeof(long double));
-	obj->Bf12 = (long double **)malloc(obj->nreal * sizeof(long double));
+	obj->Af12 = (long double **)malloc(obj->nreal * sizeof(long double*));
+	obj->Bf12 = (long double **)malloc(obj->nreal * sizeof(long double*));
 	obj->alphaf12 = (long double *)malloc(obj->nreal * sizeof(long double));
 	for (i = 0; i < obj->nreal; i++) {
 		Af12[i] = (long double *)malloc(obj->nreal * sizeof(long double));
@@ -476,7 +455,6 @@ void initialize_f12(CEC2005data *obj) {
 	for (i = 0; i < obj->nreal; i++) {
 		for (j = 0; j < obj->nreal; j++)	{
 			fscanf(fpt, "%Lf", &(obj->Af12[i][j]));
-			//            printf("\n Af12[%d][%d] = %LE",i+1,j+1,Af12[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -492,7 +470,6 @@ void initialize_f12(CEC2005data *obj) {
 	for (i = 0; i < obj->nreal; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->Bf12[i][j]));
-			//            printf("\n B[%d][%d] = %LE",i+1,j+1,B[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -505,10 +482,8 @@ void initialize_f12(CEC2005data *obj) {
 			} while (c != '\n');
 		}
 	}
-	/* Reading alpha */
 	for (i = 0; i < obj->nreal; i++) {
 		fscanf(fpt, "%Lf", &(obj->alphaf12[i]));
-		//        printf("\n alpha[%d] = %LE",i+1,alpha[i]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -460.0;
@@ -527,7 +502,6 @@ void initialize_f13(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
 			obj->o[i][j] -= 1.0;
-			//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 	}
 	fclose(fpt);
@@ -552,7 +526,6 @@ void initialize_f14(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
-		//            printf("\n M[%d][%d] = %LE",i+1,j+1,g[i][j]);
 	}
 	fclose(fpt);
 	fpt = myopen("E_ScafferF6_func_data.txt", "r");
@@ -562,7 +535,6 @@ void initialize_f14(CEC2005data *obj) {
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
-		//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 	}
 	fclose(fpt);
 	obj->bias[0] = -300.0;
@@ -581,12 +553,10 @@ void initialize_f15(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
-		//        printf("\n");
 	}
 	fclose(fpt);
 	obj->lam[0] = 1.0;
@@ -615,12 +585,10 @@ void initialize_f16(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
-		//        printf("\n");
 	}
 	fclose(fpt);
 	if (obj->nreal == 2)
@@ -635,7 +603,6 @@ void initialize_f16(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//                printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -668,12 +635,10 @@ void initialize_f17(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//            printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
-		//        printf("\n");
 	}
 	fclose(fpt);
 	if (obj->nreal == 2)
@@ -688,13 +653,11 @@ void initialize_f17(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//                printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
 			} while (c != '\n');
 		}
-		//        printf("\n");
 	}
 	obj->lam[0] = 1.0;
 	obj->lam[1] = 1.0;
@@ -722,7 +685,6 @@ void initialize_f18(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			// printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -744,7 +706,6 @@ void initialize_f18(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -790,7 +751,6 @@ void initialize_f19(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -812,7 +772,6 @@ void initialize_f19(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -858,16 +817,12 @@ void initialize_f20(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
 		} while (c != '\n');
 	}
 	fclose(fpt);
-	/**
-	 * Daniel: Arreglado errror
-	 */
 	for (j = 0; j < obj->nreal; j++) {
 		obj->o[9][j] = 0.0;
 	}
@@ -887,7 +842,6 @@ void initialize_f20(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -933,7 +887,6 @@ void initialize_f21(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -952,7 +905,6 @@ void initialize_f21(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -995,7 +947,6 @@ void initialize_f22(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -1014,7 +965,6 @@ void initialize_f22(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -1057,7 +1007,6 @@ void initialize_f23(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -1076,7 +1025,6 @@ void initialize_f23(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -1119,7 +1067,6 @@ void initialize_f24(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
-			//printf("\n O[%d][%d] = %LE",i+1,j+1,o[i][j]);
 		}
 		do {
 			fscanf(fpt, "%c", &c);
@@ -1138,7 +1085,6 @@ void initialize_f24(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				//printf("\n M[%d][%d][%d] = %LE",i+1,j+1,k+1,l[i][j][k]);
 			}
 			do {
 				fscanf(fpt, "%c", &c);
@@ -1294,38 +1240,6 @@ long double calc_benchmark_func(long double *x, CEC2005data *fdata) {
 	return 0;
 }
 
-bool isBound_cec2005(void) {
-	if (nfunc != 7 && nfunc != 25)     {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-/**
- * fun: Number/index of benchmark function
- * dim: Number of variable/components of the selected benchmark functions
- */
-CEC2005data* init_cec2005(int fun, int dim) {
-	// Asigno valor a las variables
-	int nfunc = fun, nreal = dim;
-	if (nfunc < 1) {
-		fprintf(stderr, "\n Wrong value of 'nfun' entered\n");
-		exit(0);
-	}
-	if (nreal != 2 && nreal != 10 && nreal != 30 && nreal != 50) {
-		fprintf(stderr, "\n Wrong value of 'nreal' entered, only 2, 10, 30, 50 variables are supported\n");
-		exit(0);
-	}
-	CEC2005data *fdata = allocate_memory(nreal, nfunc);
-	initialize(fdata);
-	return fdata;
-}
-
-void finish_cec2005(CEC2005data *fdata) {
-	free_memory(fdata);
-}
-
 struct cec2005function {
 	int ident;       /**< Par�metro identificador de la funci�n */
 	char* name;     /**< Nombre de la funci�n (para poder mostrarla en pantalla */
@@ -1363,14 +1277,36 @@ static CECFUNCTION cec2005Fun[] = {
 	{25, "Rotated Hybrid Composition Function 4 without Bounds", {2, 5}, 260}
 };
 
-static int cec2005FunSize = 25;
-
 /**
- * Permite obtener la informaci�n sobre la funci�n
+ * fun: Number/index of benchmark function
+ * dim: Number of variable/components of the selected benchmark functions
  */
+CEC2005data* init_cec2005(int fun, int dim) {
+	int nfunc = fun, nreal = dim;
+	if (nfunc < 1 || nfunc > 25) {
+		fprintf(stderr, "\n Wrong value of 'nfun' entered\n");
+		exit(0);
+	}
+	if (nreal != 2 && nreal != 10 && nreal != 30 && nreal != 50) {
+		fprintf(stderr, "\n Wrong value of 'nreal' entered, only 2, 10, 30, 50 variables are supported\n");
+		exit(0);
+	}
+	CEC2005data *fdata = allocate_memory(nreal, nfunc);
+	initialize(fdata);
+	return fdata;
+}
+
+bool isBound_cec2005(CEC2005data *fdata) {
+	if (fdata->nfunc != 7 && fdata->nfunc != 25)     {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 void getInfo_cec2005(int fun, char *name, double *min, double *max, double *optime) {
 	int id;
-	assert(fun >= 0 && fun <= cec2005FunSize);
+	assert(fun >= 0 && fun <= 25);
 	id = fun - 1;
 	strcpy(name, cec2005Fun[id].name);
 	*min = cec2005Fun[id].range[0];
@@ -1378,29 +1314,17 @@ void getInfo_cec2005(int fun, char *name, double *min, double *max, double *opti
 	*optime = cec2005Fun[id].optime;
 }
 
-/**
- * La funci�n eval del CEC2005
- */
-double eval_cec2005_ld(const long double *x, int ndim) {
-	double optime = cec2005Fun[nfunc - 1].optime;
-	long double *y = (long double *)x;
-	double fit = calc_benchmark_func(y) - optime;
-	assert(fit >= 0);
-	return fit;
+long double eval_cec2005(double *x, CEC2005data *fdata) {
+	long double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->nfunc - 1].optime;
+	if (fx < 0) {
+		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, optime);
+	}
+	assert(fx >= 0);
+	return fx;
 }
 
-double eval_cec2005(const double *x, int ndim) {
-	double optime = cec2005Fun[nfunc - 1].optime;
-	long double y[ndim];
-	for (int i = 0; i < ndim; ++i) {
-		y[i] = x[i];
-	}
-	double fit = calc_benchmark_func(y) - optime;
-	if (fit < 0) {
-		fprintf(stderr, "Value: %le\tOptime: %le\n", fit, optime);
-	}
-	assert(fit >= 0);
-	return fit;
+void finish_cec2005(CEC2005data *fdata) {
+	free_memory(fdata);
 }
 
 int main() {
