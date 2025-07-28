@@ -1,5 +1,7 @@
 #!cpython
 
+from libcpp cimport bool
+
 
 cdef extern from "benchfunctions.h":
     cdef struct cec2005data:
@@ -36,6 +38,6 @@ cdef extern from "cec2005.h":
     CEC2005data * init_cec2005(int, int)
     void getInfo_cec2005(int, char*, double*, double*, double*)
     bool isBound_cec2005()
-    long double eval_cec2005(long double*, CEC2005data*)
+    double eval_cec2005(double*, CEC2005data*)
     void finish_cec2005(CEC2005data*)
 

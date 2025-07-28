@@ -1181,7 +1181,7 @@ void initialize(CEC2005data *obj) {
 	}
 }
 
-long double calc_benchmark_func(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func(double *x, CEC2005data *fdata) {
 	int num = fdata->nfunc;
 	if (num == 1) {
 		return calc_benchmark_func_f1(x, fdata);
@@ -1296,7 +1296,7 @@ CEC2005data* init_cec2005(int fun, int dim) {
 	return fdata;
 }
 
-bool isBound_cec2005(CEC2005data *fdata) {
+bool isBound_cec2005(CEC2005data * fdata) {
 	if (fdata->nfunc != 7 && fdata->nfunc != 25)     {
 		return true;
 	} else {
@@ -1304,7 +1304,7 @@ bool isBound_cec2005(CEC2005data *fdata) {
 	}
 }
 
-void getInfo_cec2005(int fun, char *name, double *min, double *max, double *optime) {
+void getInfo_cec2005(int fun, char * name, double * min, double * max, double * optime) {
 	int id;
 	assert(fun >= 0 && fun <= 25);
 	id = fun - 1;
@@ -1314,8 +1314,8 @@ void getInfo_cec2005(int fun, char *name, double *min, double *max, double *opti
 	*optime = cec2005Fun[id].optime;
 }
 
-long double eval_cec2005(double *x, CEC2005data *fdata) {
-	long double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->nfunc - 1].optime;
+double eval_cec2005(double * x, CEC2005data * fdata) {
+	double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->nfunc - 1].optime;
 	if (fx < 0) {
 		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, optime);
 	}
@@ -1323,7 +1323,7 @@ long double eval_cec2005(double *x, CEC2005data *fdata) {
 	return fx;
 }
 
-void finish_cec2005(CEC2005data *fdata) {
+void finish_cec2005(CEC2005data * fdata) {
 	free_memory(fdata);
 }
 

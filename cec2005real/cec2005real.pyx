@@ -5,11 +5,7 @@ import sys
 import pkgutil
 import cython
 
-import numpy as np
-cimport numpy as np
-
 from libc.stdlib cimport malloc, free
-from libcpp cimport bool
 
 from cec2005decl cimport (
     CEC2005data,
@@ -20,31 +16,11 @@ from cec2005decl cimport (
     finish_cec2005
 )
 
-ctypedef np.longdouble_t np_ldouble
-
 
 def file_load(data_dir: str, file_name: str):
     if os.path.exists('%s/%s' % (data_dir, file_name)): return
     data = pkgutil.get_data('cec2005real', 'cdatafiles/%s' % file_name)
     with open('%s/%s' % (data_dir, file_name), 'wb') as f: f.write(data)
-
-
-cpdef _get_info(int fun, int dim):
-    """
-    Return the lower bound of the function
-    """
-    cdef double optimum
-    cdef double minvalue, maxvalue
-    cdef char* name = <char *> malloc(300)
-    optimum = 0
-    getInfo_cec2005(fun, name, &minvalue, &maxvalue, &optimum)
-    return {
-        'lower': minvalue,
-        'upper': maxvalue,
-        'threshold': 1e-8,
-        'best': optimum,
-        'dimension': dim
-    }
 
 
 cdef class Function:
@@ -150,23 +126,26 @@ cdef class Function:
 
     cpdef info(self):
         if not self.initialized: raise ValueError('Data not initialized')
-        return _get_info(self.fdata.nfunc, self.fdata.nreal)
+        cdef double optimum = 0
+        cdef double minvalue, maxvalue
+        cdef char* name = <char *> malloc(300)
+        getInfo_cec2005(self.fdata.nfunc, name, &minvalue, &maxvalue, &optimum)
+        return {
+            'lower': minvalue,
+            'upper': maxvalue,
+            'threshold': 1e-8,
+            'best': optimum,
+            'dimension': self.fdata.nreal
+        }
     
-    cpdef eval(self, x):
+    cpdef eval(self, double[::1] x):
         if not self.initialized: raise ValueError('Data not initialized')
-        x_arr = np.asarray(x, dtype=np.longdouble)
-        # Check dimensionality
-        if x_arr.ndim != 1: raise ValueError("Input must be a 1D array or list.")
-        if x_arr.shape[0] != self.cdata.nreal: raise ValueError(f"Input vector must have dimension {self.fdata.nreal}.")
-        # Convert to numpy array that is contiguouus
-        x_arr = np.ascontiguousarray(x_arr, dtype=np.longdouble)
-        cdef np.ndarray[np_ldouble, ndim=1, mode="c"] x_np = x_arr
-        # Convert to C array
-        cdef long double* x_ptr = <long double*> x_np.data
-        # Evaluate the x
-        cdef long double result = eval_cec2005(x_ptr, self.fdata)
-        # Return to caller
-        return float(result)
-
+        cdef double * y = <double *> malloc(self.fdata.nreal * cython.sizeof(double))
+        if y is NULL: raise MemoryError()
+        for i in range(self.fdata.nreal): y[i] = x[i]
+        cdef double fx = eval_cec2005(y, self.fdata)
+        free(y)
+        return fx
+        
     def __dealloc__(self):
         if self.initialized: finish_cec2005(self.fdata)
