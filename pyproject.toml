@@ -16,7 +16,7 @@ authors = [
 maintainers = [
   {name = "Klemen Berkovic", email = "klemen.berkovic@student.um.si"}
 ]
-description = "Package for benchmark for the Real Large Scale Global Optimization session on IEEE Congress on Evolutionary Computation CEC2005,"
+description = "Package for benchmark for the Real Large Scale Global Optimization session on IEEE Congress on Evolutionary Computation CEC2005"
 readme = "README.md"
 license = {text = "GPL V3"}
 keywords = ["c", "optimization", "benchmarks", "CEC2005", "Global Optimization"]
