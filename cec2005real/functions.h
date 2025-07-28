@@ -15,6 +15,6 @@ double calc_schwefel (double*, int);
 double calc_rosenbrock (double*, int);
 double nc_rastrigin (double*, int, double*);
 double nc_schaffer (double, double);
-double ExpandedF6 (double, double)
+double ExpandedF6 (double, double);
 
 #endif
