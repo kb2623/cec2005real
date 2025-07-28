@@ -5,35 +5,35 @@
 #include "functions.h"
 #include "mrandom.h"
 
-long double calc_benchmark_func_f1(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f1(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_sphere (trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f2(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f2(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_schwefel (fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f3(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f3(double *x, CEC2005data *fdata) {
 	int i;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
-	long double y = 0.0;
+	double y = 0.0;
 	for (i = 0; i < fdata->nreal; i++) {
 		y += fdata->trans_x[i] * fdata->trans_x[i] * pow(1.0e6, i / (fdata->nreal - 1.0));
 	}
 	return y + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f4(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f4(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
-	long double y = calc_schwefel(fdata->trans_x, fdata->nreal) * (1.0 + 0.4 * fabs(randomnormaldeviate()));
+	double y = calc_schwefel(fdata->trans_x, fdata->nreal) * (1.0 + 0.4 * fabs(randomnormaldeviate()));
 	return y + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f5(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f5(double *x, CEC2005data *fdata) {
 	int i, j;
-    long double y;
+    double y;
 	fdata->basic_f[0] = -INF;
 	for (i =0 ; i < fdata->nreal; i++) {
 		y = 0.0;
@@ -48,44 +48,44 @@ long double calc_benchmark_func_f5(long double *x, CEC2005data *fdata) {
 	return fdata->basic_f[0] + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f6(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f6(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_rosenbrock(fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f7(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f7(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_griewank(fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f8(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f8(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_ackley(fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f9(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f9(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_rastrigin(fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f10(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f10(double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	return calc_rastrigin(fdata->trans_x, fdata->nreal) + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f11(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f11(double *x, CEC2005data *fdata) {
 	int i;
 	for (i = 0; i < fdata->nreal; i++) {
 		fdata->norm_x[i] = 0.0;
 	}
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
-	long double y = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
+	double y = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
 	return y + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f12(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f12(double *x, CEC2005data *fdata) {
 	int i, j;
-	long double res, sum1, sum2, y = 0.0;
+	double res, sum1, sum2, y = 0.0;
 	for (i = 0; i < fdata->nreal; i++) {
 		sum1 = 0.0, sum2 = 0.0;
 		for (j = 0; j < fdata->nreal; j++) {
@@ -97,9 +97,9 @@ long double calc_benchmark_func_f12(long double *x, CEC2005data *fdata) {
 	return y + fdata->bias[0];
 }
 
-long double calc_benchmark_func_f13(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f13(double *x, CEC2005data *fdata) {
 	int i;
-	long double tmp, y = 0.0;
+	double tmp, y = 0.0;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	for (i = 0; i < fdata->nreal - 1; i++) {
 		tmp = 100.0 * pow((fdata->trans_x[i] * fdata->trans_x[i] - fdata->trans_x[i + 1]), 2.0) + 1.0 * pow((fdata->trans_x[i] - 1.0), 2.0);
@@ -110,9 +110,9 @@ long double calc_benchmark_func_f13(long double *x, CEC2005data *fdata) {
 	return y;
 }
 
-long double calc_benchmark_func_f14(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f14(double *x, CEC2005data *fdata) {
 	int i;
-	long double temp1, temp2, y = 0.0;
+	double temp1, temp2, y = 0.0;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	for (i = 0; i < fdata->nreal-1; i++) {
 		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1], 2.0)))), 2.0);
@@ -153,9 +153,9 @@ void calc_benchmark_norm_f15(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f15(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f15(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double y;
+	double y;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -218,9 +218,9 @@ void calc_benchmark_norm_f16(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f16(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f16(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double y;
+	double y;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -283,9 +283,9 @@ void calc_benchmark_norm_f17(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f17(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f17(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double y = 0.0;
+	double y = 0.0;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -349,9 +349,9 @@ void calc_benchmark_norm_f18(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f18(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f18(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double res;
+	double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -414,9 +414,9 @@ void calc_benchmark_norm_f19(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f19(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f19(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double res;
+	double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -479,9 +479,9 @@ void calc_benchmark_norm_f20(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f20(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f20(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double res;
+	double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -518,7 +518,7 @@ long double calc_benchmark_func_f20(long double *x, CEC2005data *fdata) {
 
 void calc_benchmark_norm_f21(CEC2005data *fdata) {
 	int i;
-	long double temp1, temp2, temp;
+	double temp1, temp2, temp;
 	transform_norm (0, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[0] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
@@ -573,9 +573,9 @@ void calc_benchmark_norm_f21(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f21(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f21(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double temp1, temp2, temp, res;
+	double temp1, temp2, temp, res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
@@ -640,7 +640,7 @@ long double calc_benchmark_func_f21(long double *x, CEC2005data *fdata) {
 
 void calc_benchmark_norm_f22(CEC2005data *fdata) {
 	int i;
-	long double temp1, temp2, temp;
+	double temp1, temp2, temp;
 	transform_norm (0, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[0] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
@@ -695,9 +695,9 @@ void calc_benchmark_norm_f22(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f22(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double temp1, temp2, temp, res;
+	double temp1, temp2, temp, res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = 0.0;
 	for (i = 0; i< fdata->nreal - 1; i++) {
@@ -762,7 +762,7 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 
 void calc_benchmark_norm_f23(CEC2005data *fdata) {
 	int i;
-	long double temp1, temp2, temp;
+	double temp1, temp2, temp;
 	transform_norm (0, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[0] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
@@ -817,9 +817,9 @@ void calc_benchmark_norm_f23(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f23(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f23(double *x, CEC2005data *fdata) {
 	int i, a, nfunc = 10;
-	long double temp1, temp2, temp, b, res;
+	double temp1, temp2, temp, b, res;
 	for (i = 0; i < fdata->nreal; i++) {
 		if (fabs(x[i] - fdata->o[0][i]) >= 0.5) {
 			res = 2.0 * x[i];
@@ -902,7 +902,7 @@ long double calc_benchmark_func_f23(long double *x, CEC2005data *fdata) {
 
 void calc_benchmark_norm_f24(CEC2005data *fdata) {
 	int i;
-	long double temp;
+	double temp;
 	for (i = 0; i < fdata->nreal; i++) {
 		fdata->norm_x[i] = 0.0;
 	}
@@ -946,9 +946,9 @@ void calc_benchmark_norm_f24(CEC2005data *fdata) {
 	return;
 }
 
-long double calc_benchmark_func_f24(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f24(double *x, CEC2005data *fdata) {
 	int i, nfunc = 10;
-	long double temp, res;
+	double temp, res;
 	for (i = 0; i < fdata->nreal; i++) {
 		fdata->norm_x[i] = 0.0;
 	}
@@ -1004,6 +1004,6 @@ void calc_benchmark_norm_f25(CEC2005data *fdata) {
 	calc_benchmark_norm_f24(fdata);
 }
 
-long double calc_benchmark_func_f25(long double *x, CEC2005data *fdata) {
+double calc_benchmark_func_f25(double *x, CEC2005data *fdata) {
 	return calc_benchmark_func_f24(x, fdata);   
 }

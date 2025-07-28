@@ -19,30 +19,30 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data))
 	obj->nreal = nreal;
 	obj->nfunc = nfunc;
-	obj->norm_x = (long double *)malloc(nreal * sizeof(long double));
-	obj->norm_f = (long double *)malloc(nfunc * sizeof(long double));
-	obj->trans_x = (long double *)malloc(nreal * sizeof(long double));
-	obj->basic_f = (long double *)malloc(nfunc * sizeof(long double));
-	obj->temp_x1 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x2 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x3 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x4 = (long double *)malloc(nreal * sizeof(long double));
-	obj->weight = (long double *)malloc(nfunc * sizeof(long double));
-	obj->sigma = (long double *)malloc(nfunc * sizeof(long double));
-	obj->lam = (long double *)malloc(nfunc * sizeof(long double));
-	obj->bias = (long double *)malloc(nfunc * sizeof(long double));
-	obj->o = (long double **)malloc(nfunc * sizeof(long double*));
-	obj->g = (long double **)malloc(nreal * sizeof(long double*));
-	obj->l = (long double ***)malloc(nfunc * sizeof(long double**));
+	obj->norm_x = (double *)malloc(nreal * sizeof(double));
+	obj->norm_f = (double *)malloc(nfunc * sizeof(double));
+	obj->trans_x = (double *)malloc(nreal * sizeof(double));
+	obj->basic_f = (double *)malloc(nfunc * sizeof(double));
+	obj->temp_x1 = (double *)malloc(nreal * sizeof(double));
+	obj->temp_x2 = (double *)malloc(nreal * sizeof(double));
+	obj->temp_x3 = (double *)malloc(nreal * sizeof(double));
+	obj->temp_x4 = (double *)malloc(nreal * sizeof(double));
+	obj->weight = (double *)malloc(nfunc * sizeof(double));
+	obj->sigma = (double *)malloc(nfunc * sizeof(double));
+	obj->lam = (double *)malloc(nfunc * sizeof(double));
+	obj->bias = (double *)malloc(nfunc * sizeof(double));
+	obj->o = (double **)malloc(nfunc * sizeof(double*));
+	obj->g = (double **)malloc(nreal * sizeof(double*));
+	obj->l = (double ***)malloc(nfunc * sizeof(double**));
 	for (i = 0; i < nfunc; i++) {
-		obj->o[i] = (long double *)malloc(nreal * sizeof(long double));
-		obj->l[i] = (long double **)malloc(nreal * sizeof(long double*));
+		obj->o[i] = (double *)malloc(nreal * sizeof(double));
+		obj->l[i] = (double **)malloc(nreal * sizeof(double*));
 	}
 	for (i = 0; i < nreal; i++) {
-		obj->g[i] = (long double *)malloc(nreal * sizeof(long double));
+		obj->g[i] = (double *)malloc(nreal * sizeof(double));
 	}
 	for (i = 0; i < nfunc; i++) for (j = 0; j < nreal; j++) {
-		obj->l[i][j] = (long double *)malloc(nreal * sizeof(long double));
+		obj->l[i][j] = (double *)malloc(nreal * sizeof(double));
 
 	}
 	obj->C = 2000.0;
@@ -64,10 +64,10 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 	for (i = 0; i < nfunc; i++) {
 		obj->basic_f[i] = 0.0;
 		obj->norm_f[i] = 0.0;
-		obj->weight[i] = 1.0 / (long double)nfunc;
+		obj->weight[i] = 1.0 / (double)nfunc;
 		obj->sigma[i] = 1.0;
 		obj->lam[i] = 1.0;
-		obj->bias[i] = 100.0 * (long double)i;
+		obj->bias[i] = 100.0 * (double)i;
 		for (j = 0; j < nreal; j++) {
 			o[i][j] = 0.0;
 			for (k = 0; k < nreal; k++) {
@@ -225,11 +225,11 @@ void initialize_f5(CEC2005data *obj) {
 	int i, j, index;
 	char c;
 	FILE *fpt;
-	obj->Af5 = (long double **)malloc(obj->nreal * sizeof(long double*));
+	obj->Af5 = (double **)malloc(obj->nreal * sizeof(double*));
 	for (i = 0; i < obj->nreal; i++) {
-		obj->Af5[i] = (long double *)malloc(obj->nreal * sizeof(long double));
+		obj->Af5[i] = (double *)malloc(obj->nreal * sizeof(double));
 	}
-	obj->Bf5 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->Bf5 = (double *)malloc(obj->nreal * sizeof(double));
 	fpt = myopen("schwefel_206_data.txt", "r");
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
@@ -440,12 +440,12 @@ void initialize_f12(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	char c;
-	obj->Af12 = (long double **)malloc(obj->nreal * sizeof(long double*));
-	obj->Bf12 = (long double **)malloc(obj->nreal * sizeof(long double*));
-	obj->alphaf12 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->Af12 = (double **)malloc(obj->nreal * sizeof(double*));
+	obj->Bf12 = (double **)malloc(obj->nreal * sizeof(double*));
+	obj->alphaf12 = (double *)malloc(obj->nreal * sizeof(double));
 	for (i = 0; i < obj->nreal; i++) {
-		Af12[i] = (long double *)malloc(obj->nreal * sizeof(long double));
-		Bf12[i] = (long double *)malloc(obj->nreal * sizeof(long double));
+		Af12[i] = (double *)malloc(obj->nreal * sizeof(double));
+		Bf12[i] = (double *)malloc(obj->nreal * sizeof(double));
 	}
 	fpt = myopen("schwefel_213_data.txt", "r");
 	if (fpt == NULL) {

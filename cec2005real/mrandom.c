@@ -8,8 +8,8 @@
  *
  * To set the seed use srandom() with parameter that represents the seed
  */
-long double randomnormaldeviate() {
-	long double x = (long double)rand() / RAND_MAX, y = (long double)rand() / RAND_MAX;
+double randomnormaldeviate() {
+	double x = (double)rand() / RAND_MAX, y = (double)rand() / RAND_MAX;
 	return sqrt(-2 * log(x)) * cos(2 * M_PI * y);
 }
 

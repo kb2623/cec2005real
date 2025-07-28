@@ -6,15 +6,15 @@
 #define E  2.7182818284590452353602874713526625
 #define PI 3.1415926535897932384626433832795029
 
-long double calc_ackley (long double*, int);
-long double calc_rastrigin (long double*, int);
-long double calc_weierstrass (long double*, int);
-long double calc_griewank (long double*, int);
-long double calc_sphere (long double*, int);
-long double calc_schwefel (long double*, int);
-long double calc_rosenbrock (long double*, int);
-long double nc_rastrigin (long double*, int, long double*);
-long double nc_schaffer (long double, long double);
-long double ExpandedF6 (long double, long double)
+double calc_ackley (double*, int);
+double calc_rastrigin (double*, int);
+double calc_weierstrass (double*, int);
+double calc_griewank (double*, int);
+double calc_sphere (double*, int);
+double calc_schwefel (double*, int);
+double calc_rosenbrock (double*, int);
+double nc_rastrigin (double*, int, double*);
+double nc_schaffer (double, double);
+double ExpandedF6 (double, double)
 
 #endif

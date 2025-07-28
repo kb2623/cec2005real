@@ -3,7 +3,7 @@
 #include <math.h>
 
 /* Function to return the maximum of two variables */
-long double maximum (long double a, long double b) {
+double maximum (double a, double b) {
 	if (a>b) {
 		return(a);
 	}
@@ -11,7 +11,7 @@ long double maximum (long double a, long double b) {
 }
 
 /* Function to return the minimum of two variables */
-long double minimum (long double a, long double b) {
+double minimum (double a, double b) {
 	if (a<b) {
 		return (a);
 	}
@@ -19,9 +19,9 @@ long double minimum (long double a, long double b) {
 }
 
 /* Function to return the modulus of a vector */
-long double modulus (long double *x, int n) {
+double modulus (double *x, int n) {
 	int i;
-	long double res;
+	double res;
 	res = 0.0;
 	for (i=0; i<n; i++) {
 		res += x[i]*x[i];
@@ -30,9 +30,9 @@ long double modulus (long double *x, int n) {
 }
 
 /* Function to return the dot product of two vecors */
-long double dot (long double *a, long double *b, int n) {
+double dot (double *a, double *b, int n) {
 	int i;
-	long double res;
+	double res;
 	res = 0.0;
 	for (i=0; i<n; i++) {
 		res += a[i]*b[i];
@@ -41,18 +41,18 @@ long double dot (long double *a, long double *b, int n) {
 }
 
 /* Function to return the mean of n variables */
-long double mean (long double *x, int n) {
+double mean (double *x, int n) {
 	int i;
-	long double res;
+	double res;
 	res = 0.0;
 	for (i=0; i<n; i++) {
 		res += x[i];
 	}
-	return (res / (long double)n);
+	return (res / (double)n);
 }
 
 /* Code to transform a variable vector based on function index 'count' */
-void transform(long double *x, int count, int nreal, long double *temp_x1, long double *temp_x2, long double *temp_x3, long double *trans_x, long double *lambda, long double **o, long double **g, long double ***l) {
+void transform(double *x, int count, int nreal, double *temp_x1, double *temp_x2, double *temp_x3, double *trans_x, double *lambda, double **o, double **g, double ***l) {
 	int i, j;
 	for (i = 0; i < nreal; i++) {
 		temp_x1[i] = x[i] - o[count][i];
@@ -76,7 +76,7 @@ void transform(long double *x, int count, int nreal, long double *temp_x1, long 
 }
 
 /* Code to transform a vector (with elements 5.0) based on function index 'count' */
-void transform_norm(int count, int nreal, long double *temp_x2, long double *temp_x3, long double *trans_x, long double *lambda, long double **g, long double ***l) {
+void transform_norm(int count, int nreal, double *temp_x2, double *temp_x3, double *trans_x, double *lambda, double **g, double ***l) {
 	int i, j;
 	for (i = 0; i < nreal; i++) {
 		temp_x2[i] = 5.0 / lambda[count];
@@ -97,10 +97,10 @@ void transform_norm(int count, int nreal, long double *temp_x2, long double *tem
 }
 
 /* Code to compute the weights for a variable vector */
-void calc_weight(long double *x, int nfunc, int nreal, long double *weight, long double *sigma, long double **o) {
+void calc_weight(double *x, int nfunc, int nreal, double *weight, double *sigma, double **o) {
 	int i, j;
-	long double sum;
-	long double max;
+	double sum;
+	double max;
 	max = -INF;
 	for (i = 0; i < nfunc; i++) {
 		sum = 0.0;
@@ -119,7 +119,7 @@ void calc_weight(long double *x, int nfunc, int nreal, long double *weight, long
 	}
 	if (sum == 0.0) {
 		for (i = 0; i < nfunc; i++) {
-			weight[i] = 1.0 / (long double)nfunc;
+			weight[i] = 1.0 / (double)nfunc;
 		}
 	} else {
 		for (i = 0; i < nfunc; i++) {
