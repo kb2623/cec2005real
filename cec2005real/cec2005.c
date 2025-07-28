@@ -1,5 +1,3 @@
-#define _ALL
-
 #include "cec2005.h"
 
 #include <assert.h>

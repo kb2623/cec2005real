@@ -36,7 +36,7 @@ setup(
     ext_modules = [cec2005real],
     package_data = {'cec2005real': [
         'cdatafiles/*.txt', 
-        'cec2005real/cec2005decl.pxd',
+        'cec2005decl.pxd',
         'util.h',
         'mrandom.h',
         'functions.h',
