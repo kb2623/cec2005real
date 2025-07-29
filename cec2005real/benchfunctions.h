@@ -1,6 +1,9 @@
 #ifndef BENCHFUNCTIONS_H
 #define BENCHFUNCTIONS_H
 
+#include "functions.h"
+#include "mrandom.h"
+
 struct cec2005data {
     int nfunc;              // number of the benchmark function to optimize
     int nreal;              // number of components/variables for functions

@@ -37,20 +37,12 @@ double *generate(int n) {
 	return values;
 }
 
+/*
 void msrand(unsigned int seed) {
-#ifdef _MT
-	_getptd()->_holdrand = (unsigned long)seed;
-#else  /* _MT */
 	holdrand = (long)seed;
-#endif /* _MT */
 }
 
 int mrand(void) {
-#ifdef _MT
-	_ptiddata ptd = _getptd();
-	return (((ptd->_holdrand = ptd->_holdrand * 214013L + 2531011L) >> 16) &
-			0x7fff);
-#else  /* _MT */
 	return (((holdrand = holdrand * 214013L + 2531011L) >> 16) & 0x7fff);
-#endif /* _MT */
 }
+*/

@@ -2,8 +2,6 @@
 
 #include <math.h>
 
-#include "util.h"
-
 /* Code to evaluate ackley's function */
 double calc_ackley (double *x, int nreal) {
 	int i;

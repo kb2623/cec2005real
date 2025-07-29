@@ -1,10 +1,8 @@
 #include "cec2005.h"
 
 #include <assert.h>
-#include <values.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <math.h>
 
@@ -14,7 +12,7 @@
  */
 CEC2005data* allocate_memory(int nreal, int nfunc) {
 	int i, j, k;
-	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data))
+	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data));
 	obj->nreal = nreal;
 	obj->nfunc = nfunc;
 	obj->norm_x = (double *)malloc(nreal * sizeof(double));
@@ -67,7 +65,7 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 		obj->lam[i] = 1.0;
 		obj->bias[i] = 100.0 * (double)i;
 		for (j = 0; j < nreal; j++) {
-			o[i][j] = 0.0;
+			obj->o[i][j] = 0.0;
 			for (k = 0; k < nreal; k++) {
 				if (j == k) {
 					obj->l[i][j][k] = 1.0;
@@ -288,13 +286,13 @@ void initialize_f6(CEC2005data *obj) {
 void initialize_f7(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
-	if (nreal == 2)
+	if (obj->nreal == 2)
 		fpt = myopen("griewank_M_D2.txt", "r");
-	if (nreal == 10)
+	if (obj->nreal == 10)
 		fpt = myopen("griewank_M_D10.txt", "r");
-	if (nreal == 30)
+	if (obj->nreal == 30)
 		fpt = myopen("griewank_M_D30.txt", "r");
-	if (nreal == 50)
+	if (obj->nreal == 50)
 		fpt = myopen("griewank_M_D50.txt", "r");
 	if (fpt == NULL) {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
@@ -313,7 +311,7 @@ void initialize_f7(CEC2005data *obj) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
 	fclose(fpt);
-	bias[0] = -180.0;
+	obj->bias[0] = -180.0;
 	return;
 }
 
@@ -385,7 +383,7 @@ void initialize_f10(CEC2005data *obj) {
 		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
-	for (i = 0; i < nreal; i++) for (j = 0; j < nreal; j++) {
+	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
@@ -395,7 +393,7 @@ void initialize_f10(CEC2005data *obj) {
 		exit(0);
 	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
-		fscanf(fpt, "%Lf", &o[i][j]);
+		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
 	fclose(fpt);
 	obj->bias[0] = -330.0;
@@ -442,8 +440,8 @@ void initialize_f12(CEC2005data *obj) {
 	obj->Bf12 = (double **)malloc(obj->nreal * sizeof(double*));
 	obj->alphaf12 = (double *)malloc(obj->nreal * sizeof(double));
 	for (i = 0; i < obj->nreal; i++) {
-		Af12[i] = (double *)malloc(obj->nreal * sizeof(double));
-		Bf12[i] = (double *)malloc(obj->nreal * sizeof(double));
+		obj->Af12[i] = (double *)malloc(obj->nreal * sizeof(double));
+		obj->Bf12[i] = (double *)malloc(obj->nreal * sizeof(double));
 	}
 	fpt = myopen("schwefel_213_data.txt", "r");
 	if (fpt == NULL) {
@@ -847,7 +845,7 @@ void initialize_f20(CEC2005data *obj) {
 		}
 	}
 	for (i = 0; i < obj->nreal; i++) {
-		obj->o[nfunc - 1][i] = 0.0;
+		obj->o[obj->nfunc - 1][i] = 0.0;
 	}
 	obj->sigma[0] = 1.0;
 	obj->sigma[1] = 2.0;
@@ -1315,7 +1313,7 @@ void getInfo_cec2005(int fun, char * name, double * min, double * max, double * 
 double eval_cec2005(double * x, CEC2005data * fdata) {
 	double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->nfunc - 1].optime;
 	if (fx < 0) {
-		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, optime);
+		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, cec2005Fun[fdata->nfunc - 1].optime);
 	}
 	assert(fx >= 0);
 	return fx;
@@ -1323,8 +1321,4 @@ double eval_cec2005(double * x, CEC2005data * fdata) {
 
 void finish_cec2005(CEC2005data * fdata) {
 	free_memory(fdata);
-}
-
-int main() {
-	return 0;
 }

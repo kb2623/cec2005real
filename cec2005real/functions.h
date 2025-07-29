@@ -1,6 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include "util.h"
+
 /* Global Constants */
 #define EPS 1.0e-10
 #define E  2.7182818284590452353602874713526625

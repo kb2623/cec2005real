@@ -1,8 +1,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <float.h>
+
 /* Global Constants */
-#define INF MAXDOUBLE
+#define INF DBL_MAX
 
 double maximum (double, double);
 double minimum (double, double);
