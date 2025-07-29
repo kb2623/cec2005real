@@ -26,13 +26,9 @@ def file_load(data_dir: str, file_name: str):
 
 cdef class Function:
     cdef CEC2005data * fdata
-    cdef bint initialized
 
-    def __cinit__(self, int fun, int dim):
-        self.fdata = init_cec2005(fun, dim)
-        self.initialized = self.fdata is not NULL
-    
     def __init__(self, int fun, int dim):
+        self.fdata = init_cec2005(fun, dim)
         os.makedirs('cdatafiles', exist_ok=True)
         if fun is 1:
             file_load('cdatafiles', 'sphere_func_data.txt')
@@ -126,7 +122,6 @@ cdef class Function:
             raise Exception('Function number not defined!!!')
 
     cpdef info(self):
-        if not self.initialized: raise ValueError('Data not initialized')
         cdef double optimum = 0
         cdef double minvalue, maxvalue
         cdef char* name = <char *> malloc(300)
@@ -144,7 +139,6 @@ cdef class Function:
         srand(seed)
     
     cpdef eval(self, double[::1] x):
-        if not self.initialized: raise ValueError('Data not initialized')
         # Reserve the array to pass to C
         cdef long double * y = <long double *> malloc(self.fdata.nreal * sizeof(long double))
         if y is NULL: raise MemoryError()
@@ -158,4 +152,4 @@ cdef class Function:
         return float(fx)
         
     def __dealloc__(self):
-        if self.initialized: finish_cec2005(self.fdata)
+        finish_cec2005(self.fdata)
