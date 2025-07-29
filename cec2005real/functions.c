@@ -3,24 +3,24 @@
 #include <math.h>
 
 /* Code to evaluate ackley's function */
-double calc_ackley (double *x, int nreal) {
+long double calc_ackley (long double *x, int nreal) {
 	int i;
-	double sum1, sum2, res;
+	long double sum1, sum2, res;
 	sum1 = 0.0, sum2 = 0.0;
 	for (i = 0; i < nreal; i++) {
 		sum1 += x[i] * x[i];
 		sum2 += cos(2.0 * PI * x[i]);
 	}
-	sum1 = -0.2*sqrt(sum1/nreal);
+	sum1 = -0.2 * sqrt(sum1 / nreal);
 	sum2 /= nreal;
 	res = 20.0 + E - 20.0 * exp(sum1) - exp(sum2);
 	return (res);
 }
 
 /* Code to evaluate rastrigin's function */
-double calc_rastrigin (double *x, int nreal) {
+long double calc_rastrigin (long double *x, int nreal) {
 	int i;
-	double res;
+	long double res;
 	res = 0.0;
 	for (i = 0; i < nreal; i++) {
 		res += (x[i] * x[i] - 10.0 * cos(2.0 * PI * x[i]) + 10.0);
@@ -29,9 +29,9 @@ double calc_rastrigin (double *x, int nreal) {
 }
 
 /* Code to evaluate weierstrass's function */
-double calc_weierstrass (double *x, int nreal) {
+long double calc_weierstrass (long double *x, int nreal) {
 	int i, j, k_max;
-	double res, sum, a, b;
+	long double res, sum, a, b;
 	a = 0.5, b = 3.0, res = 0.0;
 	k_max = 20;
 	for (i = 0; i < nreal; i++) {
@@ -45,9 +45,9 @@ double calc_weierstrass (double *x, int nreal) {
 }
 
 /* Code to evaluate griewank's function */
-double calc_griewank (double *x, int nreal) {
+long double calc_griewank (long double *x, int nreal) {
 	int i;
-	double s, p, res;
+	long double s, p, res;
 	s = 0.0, p = 1.0;
 	for (i=0; i < nreal; i++) {
 		s += x[i] * x[i];
@@ -58,9 +58,9 @@ double calc_griewank (double *x, int nreal) {
 }
 
 /* code to evaluate sphere function */
-double calc_sphere (double *x, int nreal) {
+long double calc_sphere (long double *x, int nreal) {
 	int i;
-	double res;
+	long double res;
 	res = 0.0;
 	for (i = 0; i < nreal; i++) {
 		res += x[i] * x[i];
@@ -69,9 +69,9 @@ double calc_sphere (double *x, int nreal) {
 }
 
 /* Code to evaluate schwefel's function */
-double calc_schwefel (double *x, int nreal) {
+long double calc_schwefel (long double *x, int nreal) {
 	int i, j;
-	double sum1, sum2;
+	long double sum1, sum2;
 	sum1 = 0.0;
 	for (i = 0; i < nreal; i++) {
 		sum2 = 0.0;
@@ -84,9 +84,9 @@ double calc_schwefel (double *x, int nreal) {
 }
 
 /* Code to evaluate rosenbrock's function */
-double calc_rosenbrock (double *x, int nreal) {
+long double calc_rosenbrock (long double *x, int nreal) {
 	int i;
-	double res;
+	long double res;
 	res = 0.0;
 	for (i = 0; i < nreal - 1; i++) {
 		res += 100.0 * pow((x[i] * x[i] - x[i+1]), 2.0) + 1.0 * pow((x[i] - 1.0), 2.0);
@@ -95,13 +95,13 @@ double calc_rosenbrock (double *x, int nreal) {
 }
 
 /* Code to evaluate schaffer's function and rounding-off variables */
-double nc_schaffer (double x, double y) {
+long double nc_schaffer (long double x, long double y) {
 	int i;
 	int a;
-	double b;
-	double res;
-	double temp1, temp2;
-	double t1[2], t2[2];
+	long double b;
+	long double res;
+	long double temp1, temp2;
+	long double t1[2], t2[2];
 	t1[0] = x;
 	t1[1] = y;
 	for (i=0; i<2; i++) {
@@ -130,11 +130,11 @@ double nc_schaffer (double x, double y) {
 }
 
 /* Code to evaluate rastrigin's function and rounding-off variables */
-double nc_rastrigin (double *x, int nreal, double *temp_x4) {
+long double nc_rastrigin (long double *x, int nreal, long double *temp_x4) {
 	int i;
 	int a;
-	double b;
-	double res;
+	long double b;
+	long double res;
 	for (i = 0; i < nreal; i++) {
 		if (fabs(x[i]) >= 0.5) {
 			res = 2.0 * x[i];
@@ -161,8 +161,8 @@ double nc_rastrigin (double *x, int nreal, double *temp_x4) {
 	return (res);
 }
 
-double ExpandedF6(double x, double y) {
-	double temp1 = pow(sin(sqrt(x * x + y * y)), 2.0);
-	double temp2 = 1.0 + 0.001 * (x * x + y * y);
+long double ExpandedF6(long double x, long double y) {
+	long double temp1 = pow(sin(sqrt(x * x + y * y)), 2.0);
+	long double temp2 = 1.0 + 0.001 * (x * x + y * y);
 	return 0.5 + (temp1 - 0.5) / (temp2 * temp2);
 }

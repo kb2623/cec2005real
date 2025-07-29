@@ -5,7 +5,8 @@ import sys
 import pkgutil
 import cython
 
-from libc.stdlib cimport malloc, free
+from libc.stdlib cimport malloc, free, srand
+from libc.time cimport time
 
 from cec2005decl cimport (
     CEC2005data,
@@ -138,14 +139,23 @@ cdef class Function:
             'dimension': self.fdata.nreal
         }
     
+    cpdef set_seed(self, unsigned int seed=0):
+        if seed == 0: seed = <unsigned int> time(NULL)
+        srand(seed)
+    
     cpdef eval(self, double[::1] x):
         if not self.initialized: raise ValueError('Data not initialized')
-        cdef double * y = <double *> malloc(self.fdata.nreal * cython.sizeof(double))
+        # Reserve the array to pass to C
+        cdef long double * y = <long double *> malloc(self.fdata.nreal * sizeof(long double))
         if y is NULL: raise MemoryError()
+        # Copy the original values
         for i in range(self.fdata.nreal): y[i] = x[i]
-        cdef double fx = eval_cec2005(y, self.fdata)
+        # Calculate the fitness value
+        cdef long double fx = eval_cec2005(y, self.fdata)
+        # Free the memeory
         free(y)
-        return fx
+        # Convert and return the value (python cannot work with long double)
+        return float(fx)
         
     def __dealloc__(self):
         if self.initialized: finish_cec2005(self.fdata)

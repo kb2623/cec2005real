@@ -12,25 +12,25 @@
  *
  * To set the seed use srandom() with parameter that represents the seed
  */
-double randomnormaldeviate() {
-	double x = (double)rand() / RAND_MAX, y = (double)rand() / RAND_MAX;
+long double randomnormaldeviate() {
+	long double x = (long double)rand() / RAND_MAX, y = (long double)rand() / RAND_MAX;
 	return sqrt(-2 * log(x)) * cos(2 * PI * y);
 }
 
 /*
  * Normal random numbers generator - Marsaglia algorithm.
  */
-double *generate(int n) {
+long double *generate(int n) {
 	int i;
 	int m = n + n % 2;
-	double *values = (double *)calloc(m, sizeof(double));
-	double average, deviation;
+	long double *values = (long double *)calloc(m, sizeof(long double));
+	long double average, deviation;
 	if (values) {
 		for (i = 0; i < m; i += 2) {
-			double x, y, rsq, f;
+			long double x, y, rsq, f;
 			do {
-				x = 2.0 * rand() / (double)RAND_MAX - 1.0;
-				y = 2.0 * rand() / (double)RAND_MAX - 1.0;
+				x = 2.0 * rand() / (long double)RAND_MAX - 1.0;
+				y = 2.0 * rand() / (long double)RAND_MAX - 1.0;
 				rsq = x * x + y * y;
 			} while (rsq >= 1. || rsq == 0.);
 			f = sqrt(-2.0 * log(rsq) / rsq);
