@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#ifndef PI
+#define PI 3.1415926535897932384626433832795029
+#endif
+
 /**
  * Implementation of normal random generator.
  *
@@ -10,7 +14,7 @@
  */
 double randomnormaldeviate() {
 	double x = (double)rand() / RAND_MAX, y = (double)rand() / RAND_MAX;
-	return sqrt(-2 * log(x)) * cos(2 * M_PI * y);
+	return sqrt(-2 * log(x)) * cos(2 * PI * y);
 }
 
 /*

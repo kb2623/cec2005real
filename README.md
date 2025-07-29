@@ -65,7 +65,7 @@ These two functionalities are done with two methods in Benchmark class:
 ```python
 >>> from cec2005real.cec2005real import Function
 >>> fbench = Function(1, 10)
->>> fbench.get_info()
+>>> fbench.info()
 {'best': 0.0,
  'dimension': 1000,
  'lower': -100.0,
@@ -77,7 +77,7 @@ These two functionalities are done with two methods in Benchmark class:
 
 ```python
 >>> from numpy.random import rand
->>> info = fbench.get_info()
+>>> info = fbench.info()
 >>> dim = info['dimension']
 >>> sol = info['lower']+rand(dim)*(info['upper']-info['lower'])
 ```
@@ -85,7 +85,6 @@ These two functionalities are done with two methods in Benchmark class:
 ### Evaluate a solution
 
 ```python
->>> fun_fitness = fbench.get_eval_function()
->>> fun_fitness(sol)
+>>> fbench.eval(sol)
 464006824710.75995
 ```
