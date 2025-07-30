@@ -18,109 +18,109 @@ from cec2005decl cimport (
 )
 
 
-def file_load(data_dir: str, file_name: str):
-    if os.path.exists('%s/%s' % (data_dir, file_name)): return
-    data = pkgutil.get_data('cec2005real', 'cdatafiles/%s' % file_name)
-    with open('%s/%s' % (data_dir, file_name), 'wb') as f: f.write(data)
+cdef void file_load(str data_dir, str file_name):
+    if not os.path.exists('%s/%s' % (data_dir, file_name)):
+        data = pkgutil.get_data('cec2005real', 'cdatafiles/%s' % file_name)
+        with open('%s/%s' % (data_dir, file_name), 'wb') as f: f.write(data)
 
 
 cdef class Function:
     cdef CEC2005data * fdata
 
     def __init__(self, int fun, int dim):
-        self.fdata = init_cec2005(fun, dim)
         os.makedirs('cdatafiles', exist_ok=True)
-        if fun is 1:
+        if fun == 1:
             file_load('cdatafiles', 'sphere_func_data.txt')
-        elif fun is 2:
+        elif fun == 2:
             file_load('cdatafiles', 'schwefel_102_data.txt')
-        elif fun is 3:
-            if dim is 2: file_load('cdatafiles', 'elliptic_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'elliptic_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'elliptic_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'elliptic_M_D50.txt')
+        elif fun == 3:
+            if dim == 2: file_load('cdatafiles', 'elliptic_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'elliptic_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'elliptic_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'elliptic_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'high_cond_elliptic_rot_data.txt')
-        elif fun is 4:
+        elif fun == 4:
             file_load('cdatafiles', 'schwefel_102_data.txt')
-        elif fun is 5:
+        elif fun == 5:
             file_load('cdatafiles', 'schwefel_206_data.txt')
-        elif fun is 6:
+        elif fun == 6:
             file_load('cdatafiles', 'rosenbrock_func_data.txt')
-        elif fun is 7:
-            if dim is 2: file_load('cdatafiles', 'griewank_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'griewank_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'griewank_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'griewank_M_D50.txt')
+        elif fun == 7:
+            if dim == 2: file_load('cdatafiles', 'griewank_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'griewank_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'griewank_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'griewank_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'griewank_func_data.txt')
-        elif fun is 8:
-            if dim is 2: file_load('cdatafiles', 'ackley_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'ackley_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'ackley_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'ackley_M_D50.txt')
+        elif fun == 8:
+            if dim == 2: file_load('cdatafiles', 'ackley_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'ackley_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'ackley_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'ackley_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'ackley_func_data.txt')
-        elif fun is 9:
+        elif fun == 9:
             file_load('cdatafiles', 'rastrigin_func_data.txt')
-        elif fun is 10:
-            if dim is 2: file_load('cdatafiles', 'rastrigin_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'rastrigin_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'rastrigin_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'rastrigin_M_D50.txt')
+        elif fun == 10:
+            if dim == 2: file_load('cdatafiles', 'rastrigin_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'rastrigin_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'rastrigin_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'rastrigin_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'rastrigin_func_data.txt')
-        elif fun is 11:
-            if dim is 2: file_load('cdatafiles', 'weierstrass_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'weierstrass_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'weierstrass_M_D50.txt')
-            elif dim is 50: file_load('cdatafiles', 'weierstrass_M_D50.txt')
+        elif fun == 11:
+            if dim == 2: file_load('cdatafiles', 'weierstrass_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'weierstrass_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'weierstrass_M_D50.txt')
+            elif dim == 50: file_load('cdatafiles', 'weierstrass_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'weierstrass_data.txt')
-        elif fun is 12:
+        elif fun == 12:
             file_load('cdatafiles', 'schwefel_213_data.txt')
-        elif fun is 13:
+        elif fun == 13:
             file_load('cdatafiles', 'EF8F2_func_data.txt')
-        elif fun is 14:
-            if dim is 2: file_load('cdatafiles', 'E_ScafferF6_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'E_ScafferF6_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'E_ScafferF6_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'E_ScafferF6_M_D50.txt')
+        elif fun == 14:
+            if dim == 2: file_load('cdatafiles', 'E_ScafferF6_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'E_ScafferF6_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'E_ScafferF6_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'E_ScafferF6_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'E_ScafferF6_func_data.txt')
-        elif fun is 15:
+        elif fun == 15:
             file_load('cdatafiles', 'hybrid_func1_data.txt')
-        elif fun in [16, 17]:
-            if dim is 2: file_load('cdatafiles', 'hybrid_func1_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'hybrid_func1_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'hybrid_func1_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'hybrid_func1_M_D50.txt')
+        elif fun == 16 or fun == 17:
+            if dim == 2: file_load('cdatafiles', 'hybrid_func1_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'hybrid_func1_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'hybrid_func1_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'hybrid_func1_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func1_data.txt')
-        elif fun in [18, 19, 20]:
-            if dim is 2: file_load('cdatafiles', 'hybrid_func2_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'hybrid_func2_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'hybrid_func2_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'hybrid_func2_M_D50.txt')
+        elif fun == 18 or fun == 19 or fun == 20:
+            if dim == 2: file_load('cdatafiles', 'hybrid_func2_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'hybrid_func2_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'hybrid_func2_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'hybrid_func2_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func2_data.txt')
-        elif fun in [21, 22, 23]:
-            if dim is 2: file_load('cdatafiles', 'hybrid_func3_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'hybrid_func3_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'hybrid_func3_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'hybrid_func3_M_D50.txt')
+        elif fun == 21 or fun == 22 or fun == 23:
+            if dim == 2: file_load('cdatafiles', 'hybrid_func3_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'hybrid_func3_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'hybrid_func3_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'hybrid_func3_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func3_data.txt')
-        elif fun in [24, 25]:
-            if dim is 2: file_load('cdatafiles', 'hybrid_func4_M_D2.txt')
-            elif dim is 10: file_load('cdatafiles', 'hybrid_func4_M_D10.txt')
-            elif dim is 30: file_load('cdatafiles', 'hybrid_func4_M_D30.txt')
-            elif dim is 50: file_load('cdatafiles', 'hybrid_func4_M_D50.txt')
+        elif fun == 24 or fun == 25:
+            if dim == 2: file_load('cdatafiles', 'hybrid_func4_M_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'hybrid_func4_M_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'hybrid_func4_M_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'hybrid_func4_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func4_data.txt')
         else:
             raise Exception('Function number not defined!!!')
-
+        self.fdata = init_cec2005(fun, dim)
+    
     cpdef info(self):
         cdef double optimum = 0
         cdef double minvalue, maxvalue
@@ -141,7 +141,7 @@ cdef class Function:
     cpdef eval(self, double[::1] x):
         # Reserve the array to pass to C
         cdef long double * y = <long double *> malloc(self.fdata.nreal * sizeof(long double))
-        if y is NULL: raise MemoryError()
+        if y == NULL: raise MemoryError()
         # Copy the original values
         for i in range(self.fdata.nreal): y[i] = x[i]
         # Calculate the fitness value
