@@ -1,6 +1,7 @@
 #include "benchfunctions.h"
 
 #include <math.h>
+#include <stdio.h>
 
 long double calc_benchmark_func_f1(long double *x, CEC2005data *fdata) {
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
@@ -151,7 +152,7 @@ void calc_benchmark_norm_f15(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f15(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double y;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
@@ -179,9 +180,9 @@ long double calc_benchmark_func_f15(long double *x, CEC2005data *fdata) {
 	for (i = 0; i  < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	y = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		y += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return y;
@@ -216,7 +217,7 @@ void calc_benchmark_norm_f16(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f16(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double y;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
@@ -244,9 +245,9 @@ long double calc_benchmark_func_f16(long double *x, CEC2005data *fdata) {
 	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	y = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		y += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return y;
@@ -281,7 +282,7 @@ void calc_benchmark_norm_f17(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f17(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double y = 0.0;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_rastrigin(fdata->trans_x, fdata->nreal);
@@ -306,11 +307,11 @@ long double calc_benchmark_func_f17(long double *x, CEC2005data *fdata) {
 	fdata->basic_f[8] = calc_sphere(fdata->trans_x, fdata->nreal);
 	transform (x, 9, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[9] = calc_sphere(fdata->trans_x, fdata->nreal);
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
-	for (i = 0; i < nfunc; i++) {
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	for (i = 0; i < fdata->nfunc; i++) {
 		y += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	y *= (1.0 + 0.2 * fabs(randomnormaldeviate()));
@@ -347,7 +348,7 @@ void calc_benchmark_norm_f18(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f18(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
@@ -375,9 +376,9 @@ long double calc_benchmark_func_f18(long double *x, CEC2005data *fdata) {
 	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);
@@ -412,7 +413,7 @@ void calc_benchmark_norm_f19(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f19(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
@@ -437,12 +438,12 @@ long double calc_benchmark_func_f19(long double *x, CEC2005data *fdata) {
 	fdata->basic_f[8] = calc_griewank(fdata->trans_x, fdata->nreal);
 	transform (x, 9, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[9] = calc_griewank(fdata->trans_x, fdata->nreal);
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);
@@ -477,7 +478,7 @@ void calc_benchmark_norm_f20(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f20(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = calc_ackley(fdata->trans_x, fdata->nreal);
@@ -502,12 +503,12 @@ long double calc_benchmark_func_f20(long double *x, CEC2005data *fdata) {
 	fdata->basic_f[8] = calc_griewank(fdata->trans_x, fdata->nreal);
 	transform (x, 9, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[9] = calc_griewank(fdata->trans_x, fdata->nreal);
-	for (i=0; i<nfunc; i++) {
+	for (i=0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);
@@ -571,7 +572,7 @@ void calc_benchmark_norm_f21(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f21(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double temp1, temp2, temp, res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[0] = 0.0;
@@ -627,9 +628,9 @@ long double calc_benchmark_func_f21(long double *x, CEC2005data *fdata) {
 	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);
@@ -639,30 +640,37 @@ void calc_benchmark_norm_f22(CEC2005data *fdata) {
 	int i;
 	long double temp1, temp2, temp;
 	transform_norm (0, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 1\n");
 	fdata->norm_f[0] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
-		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i],2.0)+pow(fdata->trans_x[i+1],2.0)))),2.0);
-		temp2 = 1.0 + 0.001*(pow(fdata->trans_x[i],2.0)+pow(fdata->trans_x[i+1],2.0));
-		fdata->norm_f[0] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
+		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1], 2.0)))), 2.0);
+		temp2 = 1.0 + 0.001 * (pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1], 2.0));
+		fdata->norm_f[0] += 0.5 + (temp1 - 0.5) / (pow(temp2, 2.0));
 	}
-	temp1 = pow((sin(sqrt(pow(fdata->trans_x[fdata->nreal-1],2.0)+pow(fdata->trans_x[0],2.0)))),2.0);
-	temp2 = 1.0 + 0.001*(pow(fdata->trans_x[fdata->nreal-1],2.0)+pow(fdata->trans_x[0],2.0));
-	fdata->norm_f[0] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
+	printf("OK 2\n");
+	temp1 = pow((sin(sqrt(pow(fdata->trans_x[fdata->nreal - 1], 2.0) + pow(fdata->trans_x[0], 2.0)))), 2.0);
+	temp2 = 1.0 + 0.001 * (pow(fdata->trans_x[fdata->nreal - 1], 2.0) + pow(fdata->trans_x[0], 2.0));
+	fdata->norm_f[0] += 0.5 + (temp1 - 0.5) / (pow(temp2, 2.0));
 	transform_norm (1, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 3\n");
 	fdata->norm_f[1] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
-		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i],2.0)+pow(fdata->trans_x[i+1],2.0)))),2.0);
-		temp2 = 1.0 + 0.001*(pow(fdata->trans_x[i],2.0)+pow(fdata->trans_x[i+1],2.0));
-		fdata->norm_f[1] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
+		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1], 2.0)))), 2.0);
+		temp2 = 1.0 + 0.001 * (pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1], 2.0));
+		fdata->norm_f[1] += 0.5 + (temp1 - 0.5) / (pow(temp2, 2.0));
 	}
+	printf("OK 4\n");
 	temp1 = pow((sin(sqrt(pow(fdata->trans_x[fdata->nreal-1],2.0)+pow(fdata->trans_x[0],2.0)))),2.0);
 	temp2 = 1.0 + 0.001*(pow(fdata->trans_x[fdata->nreal-1],2.0)+pow(fdata->trans_x[0],2.0));
-	fdata->norm_f[1] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
+	fdata->norm_f[1] += 0.5 + (temp1 - 0.5) / (pow(temp2, 2.0));
 	transform_norm (2, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 5\n");
 	fdata->norm_f[2] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform_norm (3, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 6\n");
 	fdata->norm_f[3] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform_norm (4, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 7\n");
 	fdata->norm_f[4] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
 		temp = 100.0*pow((fdata->trans_x[i]*fdata->trans_x[i]-fdata->trans_x[i+1]),2.0) + 1.0*pow((fdata->trans_x[i]-1.0),2.0);
@@ -671,6 +679,7 @@ void calc_benchmark_norm_f22(CEC2005data *fdata) {
 	temp = 100.0*pow((fdata->trans_x[fdata->nreal-1]*fdata->trans_x[fdata->nreal-1]-fdata->trans_x[0]),2.0) + 1.0*pow((fdata->trans_x[fdata->nreal-1]-1.0),2.0);
 	fdata->norm_f[4] += (temp*temp)/4000.0 - cos(temp) + 1.0;
 	transform_norm (5, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
+	printf("OK 8\n");
 	fdata->norm_f[5] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
 		temp = 100.0*pow((fdata->trans_x[i]*fdata->trans_x[i]-fdata->trans_x[i+1]),2.0) + 1.0*pow((fdata->trans_x[i]-1.0),2.0);
@@ -683,19 +692,24 @@ void calc_benchmark_norm_f22(CEC2005data *fdata) {
 	}
 	transform_norm (6, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[6] = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
+	printf("OK 9\n");
 	transform_norm (7, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[7] = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
+	printf("OK 10\n");
 	transform_norm (8, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[8] = calc_griewank(fdata->trans_x, fdata->nreal);
+	printf("OK 11\n");
 	transform_norm (9, fdata->nreal, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->g, fdata->l);
 	fdata->norm_f[9] = calc_griewank(fdata->trans_x, fdata->nreal);
+	printf("OK 12\n");
 	return;
 }
 
 long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double temp1, temp2, temp, res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 1\n");
 	fdata->basic_f[0] = 0.0;
 	for (i = 0; i< fdata->nreal - 1; i++) {
 		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1],2.0)))), 2.0);
@@ -706,6 +720,7 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 	temp2 = 1.0 + 0.001*(pow(fdata->trans_x[fdata->nreal - 1], 2.0) + pow(fdata->trans_x[0], 2.0));
 	fdata->basic_f[0] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 2\n");
 	fdata->basic_f[1] = 0.0;
 	for (i = 0; i < fdata->nreal-1; i++) {
 		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1],2.0)))), 2.0);
@@ -716,10 +731,13 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 	temp2 = 1.0 + 0.001*(pow(fdata->trans_x[fdata->nreal-1],2.0)+pow(fdata->trans_x[0],2.0));
 	fdata->basic_f[1] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
 	transform (x, 2, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 3\n");
 	fdata->basic_f[2] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform (x, 3, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 4\n");
 	fdata->basic_f[3] = calc_rastrigin(fdata->trans_x, fdata->nreal);
 	transform (x, 4, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 5\n");
 	fdata->basic_f[4] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
 		temp = 100.0 * pow((fdata->trans_x[i]*fdata->trans_x[i]-fdata->trans_x[i+1]),2.0) + 1.0*pow((fdata->trans_x[i]-1.0),2.0);
@@ -728,6 +746,7 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 	temp = 100.0*pow((fdata->trans_x[fdata->nreal-1]*fdata->trans_x[fdata->nreal-1]-fdata->trans_x[0]),2.0) + 1.0*pow((fdata->trans_x[fdata->nreal-1]-1.0),2.0);
 	fdata->basic_f[4] += (temp*temp)/4000.0 - cos(temp) + 1.0;
 	transform (x, 5, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 6\n");
 	fdata->basic_f[5] = 0.0;
 	for (i = 0; i < fdata->nreal - 1; i++) {
 		temp = 100.0*pow((fdata->trans_x[i]*fdata->trans_x[i]-fdata->trans_x[i+1]),2.0) + 1.0*pow((fdata->trans_x[i]-1.0),2.0);
@@ -739,21 +758,27 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 		fdata->norm_x[i] = 0.0;
 	}
 	transform (x, 6, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 7\n");
 	fdata->basic_f[6] = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
 	transform (x, 7, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 8\n");
 	fdata->basic_f[7] = calc_weierstrass(fdata->trans_x, fdata->nreal) - calc_weierstrass(fdata->norm_x, fdata->nreal);
 	transform (x, 8, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 9\n");
 	fdata->basic_f[8] = calc_griewank(fdata->trans_x, fdata->nreal);
 	transform (x, 9, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
+	printf("K 10\n");
 	fdata->basic_f[9] = calc_griewank(fdata->trans_x, fdata->nreal);
 	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	printf("K 11\n");
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
+	printf("K 12\n");
 	return (res);
 }
 
@@ -815,7 +840,7 @@ void calc_benchmark_norm_f23(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f23(long double *x, CEC2005data *fdata) {
-	int i, a, nfunc = 10;
+	int i, a;
 	long double temp1, temp2, temp, b, res;
 	for (i = 0; i < fdata->nreal; i++) {
 		if (fabs(x[i] - fdata->o[0][i]) >= 0.5) {
@@ -889,9 +914,9 @@ long double calc_benchmark_func_f23(long double *x, CEC2005data *fdata) {
 	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(fdata->temp_x4, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(fdata->temp_x4, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);
@@ -944,7 +969,7 @@ void calc_benchmark_norm_f24(CEC2005data *fdata) {
 }
 
 long double calc_benchmark_func_f24(long double *x, CEC2005data *fdata) {
-	int i, nfunc = 10;
+	int i;
 	long double temp, res;
 	for (i = 0; i < fdata->nreal; i++) {
 		fdata->norm_x[i] = 0.0;
@@ -986,12 +1011,12 @@ long double calc_benchmark_func_f24(long double *x, CEC2005data *fdata) {
 	}
 	transform (x, 9, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
 	fdata->basic_f[9] = (calc_sphere(fdata->trans_x, fdata->nreal)) * (1.0 + 0.1* fabs(randomnormaldeviate()));
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		fdata->basic_f[i] *= fdata->C / fdata->norm_f[i];
 	}
-	calc_weight(x, nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
+	calc_weight(x, fdata->nfunc, fdata->nreal, fdata->weight, fdata->sigma, fdata->o);
 	res = fdata->global_bias;
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < fdata->nfunc; i++) {
 		res += fdata->weight[i] * (fdata->basic_f[i] + fdata->bias[i]);
 	}
 	return (res);

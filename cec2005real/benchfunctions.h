@@ -5,7 +5,8 @@
 #include "mrandom.h"
 
 struct cec2005data {
-    int nfunc;              // number of the benchmark function to optimize
+    int findex;             // Index/number of the optimization function
+    int nfunc;              // number of the function in optimization function
     int nreal;              // number of components/variables for functions
     long double C;
     long double global_bias;

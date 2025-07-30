@@ -13,43 +13,49 @@
 CEC2005data* allocate_memory(int nreal, int nfunc) {
 	int i, j, k;
 	CEC2005data *obj = (CEC2005data*)malloc(sizeof(CEC2005data));
-	obj->nreal = nreal;
-	obj->nfunc = nfunc;
-	obj->norm_x = (long double *)malloc(nreal * sizeof(long double));
-	obj->norm_f = (long double *)malloc(nfunc * sizeof(long double));
-	obj->trans_x = (long double *)malloc(nreal * sizeof(long double));
-	obj->basic_f = (long double *)malloc(nfunc * sizeof(long double));
-	obj->temp_x1 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x2 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x3 = (long double *)malloc(nreal * sizeof(long double));
-	obj->temp_x4 = (long double *)malloc(nreal * sizeof(long double));
-	obj->weight = (long double *)malloc(nfunc * sizeof(long double));
-	obj->sigma = (long double *)malloc(nfunc * sizeof(long double));
-	obj->lam = (long double *)malloc(nfunc * sizeof(long double));
-	obj->bias = (long double *)malloc(nfunc * sizeof(long double));
-	obj->o = (long double **)malloc(nfunc * sizeof(long double*));
-	obj->g = (long double **)malloc(nreal * sizeof(long double*));
-	obj->l = (long double ***)malloc(nfunc * sizeof(long double**));
-	for (i = 0; i < nfunc; i++) {
-		obj->o[i] = (long double *)malloc(nreal * sizeof(long double));
-		obj->l[i] = (long double **)malloc(nreal * sizeof(long double*));
+	obj->findex = nfunc, obj->nreal = nreal;
+	if (obj->findex >= 1 && obj->findex <= 14) {
+		obj->nfunc = 1;
+	} else if (obj->findex >= 15 && obj->findex <= 25) {
+		obj->nfunc = 10;
+	} else {
+		obj->nfunc = 1;
 	}
-	for (i = 0; i < nreal; i++) {
-		obj->g[i] = (long double *)malloc(nreal * sizeof(long double));
+	obj->norm_x = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->norm_f = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->trans_x = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->basic_f = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->temp_x1 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->temp_x2 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->temp_x3 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->temp_x4 = (long double *)malloc(obj->nreal * sizeof(long double));
+	obj->weight = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->sigma = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->lam = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->bias = (long double *)malloc(obj->nfunc * sizeof(long double));
+	obj->o = (long double **)malloc(obj->nfunc * sizeof(long double*));
+	obj->g = (long double **)malloc(obj->nreal * sizeof(long double*));
+	obj->l = (long double ***)malloc(obj->nfunc * sizeof(long double**));
+	for (i = 0; i < obj->nfunc; i++) {
+		obj->o[i] = (long double *)malloc(obj->nreal * sizeof(long double));
+		obj->l[i] = (long double **)malloc(obj->nreal * sizeof(long double*));
 	}
-	for (i = 0; i < nfunc; i++) for (j = 0; j < nreal; j++) {
-		obj->l[i][j] = (long double *)malloc(nreal * sizeof(long double));
+	for (i = 0; i < obj->nreal; i++) {
+		obj->g[i] = (long double *)malloc(obj->nreal * sizeof(long double));
+	}
+	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
+		obj->l[i][j] = (long double *)malloc(obj->nreal * sizeof(long double));
 
 	}
 	obj->C = 2000.0;
-	for (i = 0; i < nreal; i++) {
+	for (i = 0; i < obj->nreal; i++) {
 		obj->norm_x[i] = 5.0;
 		obj->trans_x[i] = 0.0;
 		obj->temp_x1[i] = 0.0;
 		obj->temp_x2[i] = 0.0;
 		obj->temp_x3[i] = 0.0;
 		obj->temp_x4[i] = 0.0;
-		for (j = 0; j < nreal; j++) {
+		for (j = 0; j < obj->nreal; j++) {
 			if (i == j) {
 				obj->g[i][j] = 1.0;
 			} else {
@@ -57,16 +63,16 @@ CEC2005data* allocate_memory(int nreal, int nfunc) {
 			}
 		}
 	}
-	for (i = 0; i < nfunc; i++) {
+	for (i = 0; i < obj->nfunc; i++) {
 		obj->basic_f[i] = 0.0;
 		obj->norm_f[i] = 0.0;
-		obj->weight[i] = 1.0 / (long double)nfunc;
+		obj->weight[i] = 1.0 / (long double)obj->nfunc;
 		obj->sigma[i] = 1.0;
 		obj->lam[i] = 1.0;
 		obj->bias[i] = 100.0 * (long double)i;
-		for (j = 0; j < nreal; j++) {
+		for (j = 0; j < obj->nreal; j++) {
 			obj->o[i][j] = 0.0;
-			for (k = 0; k < nreal; k++) {
+			for (k = 0; k < obj->nreal; k++) {
 				if (j == k) {
 					obj->l[i][j][k] = 1.0;
 				} else {
@@ -96,7 +102,7 @@ void free_memory(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		free(obj->l[i][j]);
 	}
-	for (i = 0; i < obj->nfunc; i++) {
+	for (i = 0; i < 10; i++) {
 		free(obj->o[i]);
 		free(obj->l[i]);
 	}
@@ -709,7 +715,7 @@ void initialize_f18(CEC2005data *obj) {
 		}
 	}
 	for (i = 0; i < obj->nreal; i++) {
-		obj->o[obj->nfunc - 1][i] = 0.0;
+		obj->o[10 - 1][i] = 0.0;
 	}
 	obj->sigma[0] = 1.0;
 	obj->sigma[1] = 2.0;
@@ -775,7 +781,7 @@ void initialize_f19(CEC2005data *obj) {
 		}
 	}
 	for (i = 0; i < obj->nreal; i++) {
-		obj->o[obj->nfunc - 1][i] = 0.0;
+		obj->o[10 - 1][i] = 0.0;
 	}
 	obj->sigma[0] = 0.1;
 	obj->sigma[1] = 2.0;
@@ -845,7 +851,7 @@ void initialize_f20(CEC2005data *obj) {
 		}
 	}
 	for (i = 0; i < obj->nreal; i++) {
-		obj->o[obj->nfunc - 1][i] = 0.0;
+		obj->o[10 - 1][i] = 0.0;
 	}
 	obj->sigma[0] = 1.0;
 	obj->sigma[1] = 2.0;
@@ -1087,7 +1093,7 @@ void initialize_f24(CEC2005data *obj) {
 			} while (c != '\n');
 		}
 	}
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < obj->nfunc; i++) {
 		obj->sigma[i] = 2.0;
 	}
 	obj->lam[0] = 10.0;
@@ -1109,7 +1115,7 @@ void initialize_f25(CEC2005data *obj) {
 }
 
 void initialize(CEC2005data *obj) {
-	int num = obj->nfunc;
+	int num = obj->findex;
 	if (num == 1) {
 		initialize_f1(obj);
 	} else if (num == 2) {
