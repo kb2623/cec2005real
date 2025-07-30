@@ -79,7 +79,7 @@ These two functionalities are done with two methods in Benchmark class:
 >>> from numpy.random import rand
 >>> info = fbench.info()
 >>> dim = info['dimension']
->>> sol = info['lower']+rand(dim)*(info['upper']-info['lower'])
+>>> sol = info['lower'] + rand(dim) * (info['upper'] - info['lower'])
 ```
 
 ### Evaluate a solution
