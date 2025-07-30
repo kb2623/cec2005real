@@ -102,7 +102,7 @@ void free_memory(CEC2005data *obj) {
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		free(obj->l[i][j]);
 	}
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < obj->nfunc; i++) {
 		free(obj->o[i]);
 		free(obj->l[i]);
 	}
@@ -112,13 +112,13 @@ void free_memory(CEC2005data *obj) {
 	free(obj->o);
 	free(obj->l);
 	free(obj->g);
-	if (obj->nfunc == 5) {
+	if (obj->findex == 5) {
 		for (i = 0; i < obj->nreal; i++) {
 			free(obj->Af5[i]);
 		}
 		free(obj->Af5);
 		free(obj->Bf5);
-	} else if (obj->nfunc == 12) {
+	} else if (obj->findex == 12) {
 		for (i = 0; i < obj->nreal; i++) {
 			free(obj->Af12[i]);
 			free(obj->Bf12[i]);
