@@ -103,11 +103,18 @@ cdef class Function:
             elif dim == 50: file_load('cdatafiles', 'hybrid_func2_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func2_data.txt')
-        elif fun == 21 or fun == 22 or fun == 23:
+        elif fun == 21 or fun == 23:
             if dim == 2: file_load('cdatafiles', 'hybrid_func3_M_D2.txt')
             elif dim == 10: file_load('cdatafiles', 'hybrid_func3_M_D10.txt')
             elif dim == 30: file_load('cdatafiles', 'hybrid_func3_M_D30.txt')
             elif dim == 50: file_load('cdatafiles', 'hybrid_func3_M_D50.txt')
+            else: raise Exception('Undefined dimensionality!!!')
+            file_load('cdatafiles', 'hybrid_func3_data.txt')
+        elif fun == 22:
+            if dim == 2: file_load('cdatafiles', 'hybrid_func3_HM_D2.txt')
+            elif dim == 10: file_load('cdatafiles', 'hybrid_func3_HM_D10.txt')
+            elif dim == 30: file_load('cdatafiles', 'hybrid_func3_HM_D30.txt')
+            elif dim == 50: file_load('cdatafiles', 'hybrid_func3_HM_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'hybrid_func3_data.txt')
         elif fun == 24 or fun == 25:

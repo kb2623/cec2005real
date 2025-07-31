@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 /**
  * nreal: Number of variables/components of the selected benchmark function
@@ -955,23 +954,34 @@ void initialize_f22(CEC2005data *obj) {
 		} while (c != '\n');
 	}
 	fclose(fpt);
-	if (obj->nreal == 2)
+	if (obj->nreal == 2) {
 		fpt = myopen("hybrid_func3_HM_D2.txt", "r");
-	if (obj->nreal == 10)
+	} else if (obj->nreal == 10) {
 		fpt = myopen("hybrid_func3_HM_D10.txt", "r");
-	if (obj->nreal == 30)
+	} else if (obj->nreal == 30) {
 		fpt = myopen("hybrid_func3_HM_D30.txt", "r");
-	if (obj->nreal == 50)
+	} else if (obj->nreal == 50) {
 		fpt = myopen("hybrid_func3_HM_D50.txt", "r");
+	} else {
+		fprintf(stderr, "\n Error: Undefined dimension for the selected function.\n");
+		exit(0);
+	}
+	if (fpt == NULL) {
+		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
+		exit(0);
+	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
+				printf("%Lf ", obj->l[i][j][k]);
 			}
+			printf("\n ");
 			do {
 				fscanf(fpt, "%c", &c);
 			} while (c != '\n');
 		}
+		printf("\n ");
 	}
 	obj->sigma[0] = 1.0;
 	obj->sigma[1] = 1.0;
