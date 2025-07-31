@@ -696,7 +696,6 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 	int i;
 	long double temp1, temp2, temp, res;
 	transform (x, 0, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
-	printf("K 1\n");
 	fdata->basic_f[0] = 0.0;
 	for (i = 0; i< fdata->nreal - 1; i++) {
 		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1],2.0)))), 2.0);
@@ -707,7 +706,6 @@ long double calc_benchmark_func_f22(long double *x, CEC2005data *fdata) {
 	temp2 = 1.0 + 0.001*(pow(fdata->trans_x[fdata->nreal - 1], 2.0) + pow(fdata->trans_x[0], 2.0));
 	fdata->basic_f[0] += 0.5 + (temp1-0.5)/(pow(temp2,2.0));
 	transform (x, 1, fdata->nreal, fdata->temp_x1, fdata->temp_x2, fdata->temp_x3, fdata->trans_x, fdata->lam, fdata->o, fdata->g, fdata->l);
-	printf("K 2\n");
 	fdata->basic_f[1] = 0.0;
 	for (i = 0; i < fdata->nreal-1; i++) {
 		temp1 = pow((sin(sqrt(pow(fdata->trans_x[i], 2.0) + pow(fdata->trans_x[i + 1],2.0)))), 2.0);
