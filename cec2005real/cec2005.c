@@ -974,14 +974,11 @@ void initialize_f22(CEC2005data *obj) {
 		for (j = 0; j < obj->nreal; j++) {
 			for (k = 0; k < obj->nreal; k++) {
 				fscanf(fpt, "%Lf", &(obj->l[i][j][k]));
-				printf("%Lf ", obj->l[i][j][k]);
 			}
-			printf("\n ");
 			do {
 				fscanf(fpt, "%c", &c);
 			} while (c != '\n');
 		}
-		printf("\n ");
 	}
 	obj->sigma[0] = 1.0;
 	obj->sigma[1] = 1.0;
