@@ -1327,9 +1327,9 @@ void getInfo_cec2005(int fun, char * name, double * min, double * max, double * 
 }
 
 long double eval_cec2005(long double * x, CEC2005data * fdata) {
-	long double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->nfunc - 1].optime;
+	long double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->findex - 1].optime;
 	if (fx < 0) {
-		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, cec2005Fun[fdata->nfunc - 1].optime);
+		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, cec2005Fun[fdata->findex - 1].optime);
 	}
 	assert(fx >= 0);
 	return fx;
