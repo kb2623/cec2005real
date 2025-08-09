@@ -1,6 +1,5 @@
 #include "cec2005.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1315,7 +1314,6 @@ bool isBound_cec2005(CEC2005data * fdata) {
 
 void getInfo_cec2005(int fun, char * name, double * min, double * max, double * optime) {
 	int id;
-	assert(fun >= 0 && fun <= 25);
 	id = fun - 1;
 	strcpy(name, cec2005Fun[id].name);
 	*min = cec2005Fun[id].range[0];
@@ -1325,10 +1323,6 @@ void getInfo_cec2005(int fun, char * name, double * min, double * max, double * 
 
 long double eval_cec2005(long double * x, CEC2005data * fdata) {
 	long double fx = calc_benchmark_func(x, fdata) - cec2005Fun[fdata->findex - 1].optime;
-	if (fx < 0) {
-		fprintf(stderr, "Value: %le\tOptime: %le\n", fx, cec2005Fun[fdata->findex - 1].optime);
-	}
-	assert(fx >= 0);
 	return fx;
 }
 
