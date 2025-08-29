@@ -1,3 +1,4 @@
+import os
 import sys
 
 from setuptools import (
@@ -18,17 +19,27 @@ sourcefiles = [
 ]
 
 libs = []
-if sys.platform != 'win32': libs.append('m')
+if sys.platform != 'win32':
+    libs.append('m')
+
+compiler_args = []
+if os.environ.get('DEBUG', '0') == '1':
+    if sys.platform == 'win32': compiler_args.extend(['/Zi', '/Od'])
+    else: compiler_args.extend(['-g', '-O0'])
+else:
+    compiler_args.extend(['-std=c2x', '-O3', '-march=native'])
+
+link_args = []
+if os.environ.get('DEBUG', '0') == '1' and sys.platform == 'win32':
+    link_args.append('/DEBUG')
 
 cec2005real = Extension(
     "cec2005real.cec2005real",
     sources = sourcefiles,
     include_dirs = ["cec2005real"],
     language = "c",
-    extra_compile_args = [
-        "-std=c2x",
-        "-O3"
-    ],
+    extra_compile_args = compiler_args,
+    extra_link_args= link_args,
     libraries = libs
 )
 

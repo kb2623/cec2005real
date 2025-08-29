@@ -72,7 +72,7 @@ cdef class Function:
         elif fun == 11:
             if dim == 2: file_load('cdatafiles', 'weierstrass_M_D2.txt')
             elif dim == 10: file_load('cdatafiles', 'weierstrass_M_D10.txt')
-            elif dim == 30: file_load('cdatafiles', 'weierstrass_M_D50.txt')
+            elif dim == 30: file_load('cdatafiles', 'weierstrass_M_D30.txt')
             elif dim == 50: file_load('cdatafiles', 'weierstrass_M_D50.txt')
             else: raise Exception('Undefined dimensionality!!!')
             file_load('cdatafiles', 'weierstrass_data.txt')

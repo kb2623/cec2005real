@@ -132,11 +132,17 @@ void free_memory(CEC2005data *obj) {
 
 FILE *myopen(const char *file, const char *mode) {
 	FILE *fpt;
-	fpt = fopen(file, mode);
+	char *fname = (char *) malloc(500 * sizeof(char));
+#ifdef _WIN32
+	sprintf(fname, "cdatafiles\\%s", file);
+#else
+	sprintf(fname, "cdatafiles/%s", file);
+#endif
+	fpt = fopen(fname, mode);
+	free(fname);
 	if (fpt == NULL) {
-		char fname[500];
-		sprintf(fname, "cdatafiles/%s", file);
-		fpt = fopen(fname, mode);
+		fprintf(stderr, "\n Error: Cannot open input file %s for reading in %s\n", file, fname);
+		exit(1);
 	}
 	return fpt;
 }
@@ -145,10 +151,6 @@ void initialize_f1(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("sphere_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -161,10 +163,6 @@ void initialize_f2(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("schwefel_102_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -184,19 +182,11 @@ void initialize_f3(CEC2005data *obj) {
 		fpt = myopen("elliptic_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("elliptic_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("high_cond_elliptic_rot_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -209,10 +199,6 @@ void initialize_f4(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("schwefel_102_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -274,10 +260,6 @@ void initialize_f6(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("rosenbrock_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 		obj->o[i][j] -= 1.0;
@@ -298,19 +280,11 @@ void initialize_f7(CEC2005data *obj) {
 		fpt = myopen("griewank_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("griewank_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("griewank_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -331,19 +305,11 @@ void initialize_f8(CEC2005data *obj) {
 		fpt = myopen("ackley_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("ackley_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("ackley_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -360,10 +326,6 @@ void initialize_f9(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("rastrigin_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -383,19 +345,11 @@ void initialize_f10(CEC2005data *obj) {
 		fpt = myopen("rastrigin_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("rastrigin_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("rastrigin_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -415,19 +369,11 @@ void initialize_f11(CEC2005data *obj) {
 		fpt = myopen("weierstrass_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("weierstrass_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("weierstrass_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -448,10 +394,6 @@ void initialize_f12(CEC2005data *obj) {
 		obj->Bf12[i] = (long double *)malloc(obj->nreal * sizeof(long double));
 	}
 	fpt = myopen("schwefel_213_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) {
 		for (j = 0; j < obj->nreal; j++)	{
 			fscanf(fpt, "%Lf", &(obj->Af12[i][j]));
@@ -494,10 +436,6 @@ void initialize_f13(CEC2005data *obj) {
 	int i, j;
 	FILE *fpt;
 	fpt = myopen("EF8F2_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -520,19 +458,11 @@ void initialize_f14(CEC2005data *obj) {
 		fpt = myopen("E_ScafferF6_M_D30.txt", "r");
 	if (obj->nreal == 50)
 		fpt = myopen("E_ScafferF6_M_D50.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nreal; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->g[i][j]));
 	}
 	fclose(fpt);
 	fpt = myopen("E_ScafferF6_func_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) for (j = 0; j < obj->nreal; j++) {
 		fscanf(fpt, "%Lf", &(obj->o[i][j]));
 	}
@@ -546,10 +476,6 @@ void initialize_f15(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func1_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -578,10 +504,6 @@ void initialize_f16(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func1_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -628,10 +550,6 @@ void initialize_f17(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func1_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -678,10 +596,6 @@ void initialize_f18(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func2_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -744,10 +658,6 @@ void initialize_f19(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func2_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -810,10 +720,6 @@ void initialize_f20(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func2_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -880,10 +786,6 @@ void initialize_f21(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func3_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -940,10 +842,6 @@ void initialize_f22(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func3_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -963,10 +861,6 @@ void initialize_f22(CEC2005data *obj) {
 		fpt = myopen("hybrid_func3_HM_D50.txt", "r");
 	} else {
 		fprintf(stderr, "\n Error: Undefined dimension for the selected function.\n");
-		exit(0);
-	}
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
 		exit(0);
 	}
 	for (i = 0; i < obj->nfunc; i++) {
@@ -1008,10 +902,6 @@ void initialize_f23(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func3_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
@@ -1068,10 +958,6 @@ void initialize_f24(CEC2005data *obj) {
 	FILE *fpt;
 	char c;
 	fpt = myopen("hybrid_func4_data.txt", "r");
-	if (fpt == NULL) {
-		fprintf(stderr, "\n Error: Cannot open input file for reading \n");
-		exit(0);
-	}
 	for (i = 0; i < obj->nfunc; i++) {
 		for (j = 0; j < obj->nreal; j++) {
 			fscanf(fpt, "%Lf", &(obj->o[i][j]));
