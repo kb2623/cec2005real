@@ -17,6 +17,8 @@ sourcefiles = [
     'cec2005real/cec2005real.pyx',
 ]
 
+libs = []
+if sys.platform != 'win32': libs.append('m')
 
 cec2005real = Extension(
     "cec2005real.cec2005real",
@@ -27,7 +29,7 @@ cec2005real = Extension(
         "-std=c2x",
         "-O3"
     ],
-    libraries = ["m"]
+    libraries = libs
 )
 
 
